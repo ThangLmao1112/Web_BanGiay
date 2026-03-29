@@ -22,31 +22,6 @@ import { HiBars3, HiOutlineXMark } from "react-icons/hi2";
 import { CiSearch, CiShoppingCart } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 
-const gentsFootWearMenuItems = [
-  { title: "SHOES", path: "/gentsShoes"},
-  { title: "SANDALS", path: "/gentsSandals"},
-  { title: "SLIPPER", path: "/gentsSlippers"},
-  { title: "SNEAKERS", path: "/gentsSneakers"},
-];
-
-const ladiesFootWearMenuItems = [
-  { title: "SANDALS", path: "/ladiesSandals" },
-  { title: "PUMPS" , path: "/ladiesPumps"},
-  { title: "SNEAKERS", path: "/ladiesSneakers" },
-  { title: "SHOES" , path: "/ladiesShoes"},
-  { title: "SNEAKERS", path: "/ladiesSlippers" },
-];
-
-const newArrivalsMenuItems = [
-  { title: "GENTS FOOTWEAR", path: "/gentsNewArrivals" },
-  { title: "LADIES FOOTWEAR", path: "/ladiesNewArrivals" },
-];
-
-const saleMenuItems = [
-  { title: "GENTS FOOTWEAR" },
-  { title: "LADIES FOOTWEAR" },
-];
-
 function NavListMenu({ label, menuItems }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -107,16 +82,12 @@ function NavListMenu({ label, menuItems }) {
 }
 
 
-function NavList() {
+function NavList({ navItems }) {
   return (
     <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1">
-      <NavListMenu label="GENTS FOOTWEAR" menuItems={gentsFootWearMenuItems} />
-      <NavListMenu
-        label="LADIES FOOTWEAR"
-        menuItems={ladiesFootWearMenuItems}
-      />
-      <NavListMenu label="NEW ARRIVALS 24" menuItems={newArrivalsMenuItems} />
-      <NavListMenu label="SALE" menuItems={saleMenuItems} />
+      {navItems.map((item) => (
+        <NavListMenu key={item.label} label={item.label} menuItems={item.menuItems} />
+      ))}
     </List>
   );
 }
@@ -133,6 +104,59 @@ const Header = ({ onSearchClick, searchVisible }) => {
   const [loading , setLoading] = useState(false)
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
+
+  const t = {
+    freeDelivery: "Miễn phí giao hàng cho đơn từ Rs.3000 trở lên",
+    gentsFootwear: "GIÀY NAM",
+    ladiesFootwear: "GIÀY NỮ",
+    newArrivals: "HÀNG MỚI VỀ 24",
+    sale: "KHUYẾN MÃI",
+    shoes: "GIÀY",
+    sandals: "SANDAL",
+    slippers: "DÉP",
+    sneakers: "SNEAKER",
+    pumps: "GIÀY CAO GÓT",
+    trackOrder: "Theo dõi đơn hàng",
+    signIn: "Đăng nhập",
+    signUp: "Đăng ký",
+    searchLabel: "Nhập để tìm",
+    searchPlaceholder: "Tìm theo tên sản phẩm",
+    searchButton: "Tìm",
+    searchError: "Vui lòng nhập tên sản phẩm để tìm kiếm.",
+  };
+
+  const navItems = [
+    {
+      label: t.gentsFootwear,
+      menuItems: [
+        { title: t.shoes, path: "/gentsShoes" },
+        { title: t.sandals, path: "/gentsSandals" },
+        { title: t.slippers, path: "/gentsSlippers" },
+        { title: t.sneakers, path: "/gentsSneakers" },
+      ],
+    },
+    {
+      label: t.ladiesFootwear,
+      menuItems: [
+        { title: t.sandals, path: "/ladiesSandals" },
+        { title: t.pumps, path: "/ladiesPumps" },
+        { title: t.sneakers, path: "/ladiesSneakers" },
+        { title: t.shoes, path: "/ladiesShoes" },
+        { title: t.slippers, path: "/ladiesSlippers" },
+      ],
+    },
+    {
+      label: t.newArrivals,
+      menuItems: [
+        { title: t.gentsFootwear, path: "/gentsNewArrivals" },
+        { title: t.ladiesFootwear, path: "/ladiesNewArrivals" },
+      ],
+    },
+    {
+      label: t.sale,
+      menuItems: [{ title: t.gentsFootwear }, { title: t.ladiesFootwear }],
+    },
+  ];
 
   useEffect(() => {
     const fetchUserFirstName = async () => {
@@ -155,7 +179,7 @@ const Header = ({ onSearchClick, searchVisible }) => {
   useEffect(() => {
     const fetchTotalItems = async () => {
       if (!userId) {
-        setError("User ID not found");
+        setErrorMessage("User ID not found");
         setLoading(false);
         return;
       }
@@ -169,7 +193,7 @@ const Header = ({ onSearchClick, searchVisible }) => {
 
         setTotalItems(response.data.data.totalItems);
       } catch (error) {
-        setError("Failed to fetch total items");
+        setErrorMessage("Failed to fetch total items");
         console.error(error);
       } finally {
         setLoading(false);
@@ -205,7 +229,7 @@ const Header = ({ onSearchClick, searchVisible }) => {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (!searchQuery.trim()) {
-      setErrorMessage("Please enter a product name to begin your search.");
+      setErrorMessage(t.searchError);
       setInterval(() => {
         setErrorMessage("");
       }, 2000);
@@ -224,7 +248,7 @@ const Header = ({ onSearchClick, searchVisible }) => {
   return (
     <div>
       <h1 className="flex bg-black text-white h-8 justify-center items-center">
-        Free Delivery on order Rs.3000/-or above
+        {t.freeDelivery}
       </h1>
       <Navbar
         className={`fixed ${navbarPosition} left-0 right-0 z-50 mx-auto max-w-screen-3xl px-4 py-2 ${navbarHeight} transition-all duration-300`}
@@ -241,10 +265,10 @@ const Header = ({ onSearchClick, searchVisible }) => {
 
           <div className="flex flex-1 items-center gap-4 justify-center">
             <div className="hidden lg:block">
-              <NavList />
+              <NavList navItems={navItems} />
             </div>
             <Typography className="hidden lg:block text-sm">
-              Track Your Order
+              {t.trackOrder}
             </Typography>
           </div>
           <div className="flex space-x-4">
@@ -262,7 +286,7 @@ const Header = ({ onSearchClick, searchVisible }) => {
                   <div className="flex justify-center items-center">
                     <div className=" w-2 max-h-6 bg-black sm:h-9 md:h-9 "></div>
                     <Typography className="p-2 text-sm sm:text-sm md:text-sm lg:lg xl:lg ">
-                      Sign in
+                      {t.signIn}
                     </Typography>
                   </div>
                 </NavLink>
@@ -271,7 +295,7 @@ const Header = ({ onSearchClick, searchVisible }) => {
                   <div className="flex justify-center items-center">
                     <div className="w-2 max-h-6 bg-black  sm:h-9 md:h-9 "></div>
                     <Typography className="p-2 text-sm sm:text-sm md:text-sm lg:lg xl:lg ">
-                      Sign Up
+                      {t.signUp}
                     </Typography>
                   </div>
                 </NavLink>
@@ -298,14 +322,14 @@ const Header = ({ onSearchClick, searchVisible }) => {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  label="Type to search"
-                  placeholder="Search by product name"
+                  label={t.searchLabel}
+                  placeholder={t.searchPlaceholder}
                   className="w-full p-2 border border-gray-300 rounded-md border-none"
                   min={1}
                 />
                 <div className="flex flex-col">
                   <Button type="submit" className="">
-                    Search
+                    {t.searchButton}
                   </Button>
                 </div>
               </form>
@@ -351,9 +375,9 @@ const Header = ({ onSearchClick, searchVisible }) => {
         </div>
         <Collapse open={openNav}>
           <div className="bg-white pb-5">
-            <NavList />
+            <NavList navItems={navItems} />
             <Typography className="text-black -mt-5 mb-2 ml-3">
-              Track Your Order
+              {t.trackOrder}
             </Typography>
             <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
               <IconButton className="bg-white">

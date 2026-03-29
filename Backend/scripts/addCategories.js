@@ -3,7 +3,7 @@ import { Category } from "../src/models/product/category.model.js"; // Adjust th
 import dotenv from "dotenv";
 
 dotenv.config({
-  path: "../.env",
+  path: "./.env",
 });
 
 const addCategories = async () => {

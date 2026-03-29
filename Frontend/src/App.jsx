@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
@@ -37,9 +37,85 @@ import FindUs from "./components/FindUs";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 
+const GOOGLE_TRANSLATE_SCRIPT_ID = "google-translate-script";
+const GOOGLE_TRANSLATE_ELEMENT_ID = "google_translate_element";
+
+const triggerGoogleTranslateVietnamese = () => {
+  const combo = document.querySelector(".goog-te-combo");
+  if (!combo) {
+    return false;
+  }
+
+  if (combo.value !== "vi") {
+    combo.value = "vi";
+    combo.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
+  return true;
+};
+
+function VietnameseRouteSync() {
+  const location = useLocation();
+
+  useEffect(() => {
+    document.documentElement.lang = "vi";
+    localStorage.setItem("language", "vi");
+
+    const applyVietnamese = () => {
+      let attempts = 0;
+      const intervalId = setInterval(() => {
+        attempts += 1;
+        const done = triggerGoogleTranslateVietnamese();
+        if (done || attempts >= 20) {
+          clearInterval(intervalId);
+        }
+      }, 150);
+    };
+
+    if (window.google?.translate?.TranslateElement) {
+      if (!document.getElementById(GOOGLE_TRANSLATE_ELEMENT_ID)?.childElementCount) {
+        new window.google.translate.TranslateElement(
+          {
+            pageLanguage: "en",
+            includedLanguages: "vi",
+            autoDisplay: false,
+          },
+          GOOGLE_TRANSLATE_ELEMENT_ID
+        );
+      }
+      applyVietnamese();
+      return;
+    }
+
+    window.googleTranslateElementInit = () => {
+      new window.google.translate.TranslateElement(
+        {
+          pageLanguage: "en",
+          includedLanguages: "vi",
+          autoDisplay: false,
+        },
+        GOOGLE_TRANSLATE_ELEMENT_ID
+      );
+      applyVietnamese();
+    };
+
+    if (!document.getElementById(GOOGLE_TRANSLATE_SCRIPT_ID)) {
+      const script = document.createElement("script");
+      script.id = GOOGLE_TRANSLATE_SCRIPT_ID;
+      script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  }, [location.pathname]);
+
+  return null;
+}
+
 function App() {
   return (
     <Router>
+      <VietnameseRouteSync />
+      <div id="google_translate_element" className="hidden" />
       <Routes>
         <Route element={<Layout />} >
         <Route path="/allProducts" element={<AllProducts />} />

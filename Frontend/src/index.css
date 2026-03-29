@@ -69,3 +69,30 @@
   height: 400px;
   width: 100%;
 }
+
+#google_translate_element {
+  display: none;
+}
+
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+.goog-logo-link,
+.goog-te-gadget span {
+  display: none !important;
+}
+
+.goog-te-gadget,
+.goog-te-combo,
+.goog-te-gadget-simple,
+.VIpgJd-ZVi9od-ORHb,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+}
