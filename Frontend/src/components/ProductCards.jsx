@@ -33,7 +33,7 @@ const ProductCards = ({
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return isNaN(date.getTime()) ? "Invalid date" : date.toLocaleDateString();
+    return isNaN(date.getTime()) ? "Ngày không hợp lệ" : date.toLocaleDateString();
   };
 
   const handleColorChange = async (color) => {
@@ -234,21 +234,21 @@ const ProductCards = ({
                 <div className="space-y-2">
                   <div className="flex items-center">
                     <span className="font-medium text-gray-700 w-36">
-                      Stock:
+                      Tồn kho:
                     </span>
                     <p className="text-gray-700 text-base">{product.stock}</p>
                   </div>
                   <div className="flex items-center">
                     <span className="font-medium text-gray-700 w-36">
-                      Sizes:
+                      Kích cỡ:
                     </span>
                     <p className="text-gray-700 text-base">
-                      {product.sizes ? product.sizes.join(", ") : "N/A"}
+                      {product.sizes ? product.sizes.join(", ") : "Không có"}
                     </p>
                   </div>
                   <div className="flex items-center">
                     <span className="font-medium text-gray-600 w-36">
-                      Created At:
+                      Ngày tạo:
                     </span>
                     <p className="text-gray-600 text-sm">
                       {formatDate(product.createdAt)}
@@ -256,7 +256,7 @@ const ProductCards = ({
                   </div>
                   <div className="flex items-center">
                     <span className="font-medium text-gray-600 w-36">
-                      Updated At:
+                      Ngày cập nhật:
                     </span>
                     <p className="text-gray-600 text-sm">
                       {formatDate(product.updatedAt)}
@@ -272,19 +272,19 @@ const ProductCards = ({
                 onClick={() => onDelete(product._id)}
                 className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
               >
-                Delete
+                Xóa
               </Button>
               <Button
                 onClick={() => onUpdate(product._id)}
                 className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
               >
-                Update
+                Cập nhật
               </Button>
             </div>
           )}
         </div>
       ) : (
-        "Testing"
+        "Đang thử nghiệm"
       )}
     </>
   );

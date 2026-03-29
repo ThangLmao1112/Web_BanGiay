@@ -24,18 +24,18 @@ function ContentCard({ img, title, desc }) {
 const contents = [
   {
     img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Search and Discovery",
-    desc: "Website visitors today demand a frictionless user experience — especially when using search. Because of the high standards we tend to offer.",
+    title: "Tìm kiếm và khám phá",
+    desc: "Khách truy cập website ngày nay cần trải nghiệm mượt mà, đặc biệt khi tìm kiếm. Vì vậy chúng tôi luôn đặt tiêu chuẩn phục vụ ở mức cao.",
   },
   {
     img: "https://images.unsplash.com/photo-1512374382149-233c42b6a83b?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Discover Our Latest Styles",
-    desc: "Fashion is a modern form of self-expression. True style elevates your confidence, while trends come and go. Real elegance is timeless.",
+    title: "Khám phá phong cách mới nhất",
+    desc: "Thời trang là cách thể hiện cá tính hiện đại. Phong cách đích thực giúp bạn tự tin hơn, còn xu hướng có thể thay đổi theo thời gian.",
   },
   {
     img: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Flourish in Style",
-    desc: "True style comes from the freedom to choose. Embrace the freedom to stand out—because uniformity never leads to greatness.",
+    title: "Tỏa sáng theo cách riêng",
+    desc: "Phong cách thực sự đến từ sự tự do lựa chọn. Hãy dám khác biệt, vì sự đồng nhất hiếm khi tạo nên dấu ấn.",
   },
 ];
 
@@ -44,13 +44,12 @@ const BlogSection = () => {
     <section className=" container mx-auto w-full px-4 py-10 lg:py-20">
       <div className="mb-8 lg:mb-16">
         <h1 className="text-3xl lg:text-5xl font-bold">
-          Build Something Great
+          Kiến tạo phong cách nổi bật
         </h1>
         <p className="mt-4 text-sm lg:text-lg max-w-xl text-gray-500">
-          We’re dedicated to bringing your fashion aspirations to life, offering
-          you the opportunity to express your style and elevate your wardrobe.
-          Every piece we deliver is crafted to help you embrace every moment
-          with confidence and flair.
+          Chúng tôi giúp bạn hiện thực hóa cảm hứng thời trang, để bạn tự tin
+          thể hiện cá tính và nâng tầm tủ đồ mỗi ngày. Mỗi sản phẩm đều được
+          chọn lọc nhằm đồng hành cùng bạn trong mọi khoảnh khắc.
         </p>
       </div>
 

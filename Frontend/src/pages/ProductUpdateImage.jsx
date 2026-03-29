@@ -27,7 +27,7 @@ const ProductUpdateImage = ({productId, onClose}) => {
         );
         
       } catch (err) {
-        ErrorToast("Failed to fetch product data.");
+        ErrorToast("Không thể tải dữ liệu sản phẩm.");
       }
       finally {
         setLoading(false)
@@ -76,7 +76,7 @@ const ProductUpdateImage = ({productId, onClose}) => {
     let newErrors = {};
 
     if (imageColorPairs.some((pair) => !pair.image || !pair.color))
-      newErrors.imageColorPairs = "Each image must have a corresponding color.";
+      newErrors.imageColorPairs = "Mỗi ảnh phải có màu tương ứng.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -112,7 +112,7 @@ const ProductUpdateImage = ({productId, onClose}) => {
     
     try {
       await addImageColorPairs(imageColorPairs);
-      SuccessToast("Image-color pairs added successfully!");
+      SuccessToast("Đã thêm cặp ảnh-màu thành công!");
       onClose()
 
       setImageColorPairs([
@@ -122,7 +122,7 @@ const ProductUpdateImage = ({productId, onClose}) => {
       setSelectedFiles([null, null]);
       setErrors({});
     } catch (error) {
-      ErrorToast("Error adding image-color pairs. Please try again.");
+      ErrorToast("Thêm cặp ảnh-màu thất bại. Vui lòng thử lại.");
     }
     finally{
     setLoading(false)
@@ -133,7 +133,7 @@ const ProductUpdateImage = ({productId, onClose}) => {
   return (
     <div className="max-w-2xl mx-auto p-8 bg-white shadow-lg rounded-lg">
     {loading && <LoadingOverlay />}
-      <h2 className="text-2xl font-bold mb-6 text-center">Add Image-Color Pairs</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center">Thêm cặp ảnh-màu</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         {imageColorPairs.map((pair, index) => (
           <div key={index} className="relative mb-4">
@@ -182,10 +182,10 @@ const ProductUpdateImage = ({productId, onClose}) => {
               onChange={(e) => handleColorChange(index, e.target.value)}
               className="w-full px-4 py-2"
               variant="outlined"
-              label="Color"
+              label="Màu"
               size="lg"
               color="blue"
-              placeholder="Color"
+              placeholder="Nhập màu"
               required
             />
             {errors[`imageColorPairs.${index}.color`] && (
@@ -200,7 +200,7 @@ const ProductUpdateImage = ({productId, onClose}) => {
           onClick={handleAddImageColorPair}
           className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
         >
-          Add Another Image
+          Thêm ảnh khác
         </button>
 
         <div className="flex justify-between">
@@ -208,13 +208,13 @@ const ProductUpdateImage = ({productId, onClose}) => {
           className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           onClick={onClose}
           >
-            Cancel
+            Hủy
           </button>
           <button
             type="submit"
             className=" bg-green-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
           >
-            Update Images
+            Cập nhật ảnh
           </button>
         </div>
       </form>

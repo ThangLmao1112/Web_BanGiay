@@ -10,22 +10,22 @@ import ManageProducts from "./ManageProducts";
 import AllProducts from "../components/AllProducts";
 
 const sidebarItems = [
-  { label: "Dashboard", icon: FaHome, component: <div>Dashboard</div> },
-  { label: "User Management", icon: FaUsers, component: null },
-  { label: "Product Management", icon: MdArchive, component: null },
-  { label: "Order Management", icon: FaShoppingBag, component: null },
-  { label: "Settings", icon: FaCog, component: null },
+  { label: "Bảng điều khiển", icon: FaHome, component: <div>Bảng điều khiển</div> },
+  { label: "Quản lý người dùng", icon: FaUsers, component: null },
+  { label: "Quản lý sản phẩm", icon: MdArchive, component: null },
+  { label: "Quản lý đơn hàng", icon: FaShoppingBag, component: null },
+  { label: "Cài đặt", icon: FaCog, component: null },
 ];
 
 const productManagementItems = [
-  { label: "Add Product", component: <AddProductForm /> },
-  { label: "Manage Products", component: <ManageProducts /> },
-  { label: "All Products", component: <AllProducts /> },
+  { label: "Thêm sản phẩm", component: <AddProductForm /> },
+  { label: "Quản lý sản phẩm", component: <ManageProducts /> },
+  { label: "Tất cả sản phẩm", component: <AllProducts /> },
 ];
 
 const userManagementItems = [
   {
-    label: "All Users",
+    label: "Tất cả người dùng",
     component: (
       <div>
         <UserList />
@@ -33,7 +33,7 @@ const userManagementItems = [
     ),
   },
   {
-    label: "Most Active Users",
+    label: "Người dùng hoạt động nhiều nhất",
     component: (
       <div>
         <MostActiveUsers />
@@ -41,7 +41,7 @@ const userManagementItems = [
     ),
   },
   {
-    label: "Delete Users",
+    label: "Xóa người dùng",
     component: (
       <div>
         <UserDeleteList />
@@ -51,24 +51,24 @@ const userManagementItems = [
 ];
 
 const orderManagementItems = [
-  { label: "View Orders", component: <div>View Orders Component</div> },
+  { label: "Xem đơn hàng", component: <div>Khu vực xem đơn hàng</div> },
   {
-    label: "Update Order Status",
-    component: <div>Update Order Status Component</div>,
+    label: "Cập nhật trạng thái đơn",
+    component: <div>Khu vực cập nhật trạng thái đơn</div>,
   },
-  { label: "Cancel Orders", component: <div>Cancel Orders Component</div> },
-  { label: "All Orders", component: <div>All Orders Component</div> },
+  { label: "Hủy đơn hàng", component: <div>Khu vực hủy đơn hàng</div> },
+  { label: "Tất cả đơn hàng", component: <div>Khu vực tất cả đơn hàng</div> },
 ];
 
 const settingsItems = [
   {
-    label: "Profile Settings",
-    component: <div>Profile Settings Component</div>,
+    label: "Cài đặt hồ sơ",
+    component: <div>Khu vực cài đặt hồ sơ</div>,
   },
-  { label: "System Settings", component: <div>System Settings Component</div> },
+  { label: "Cài đặt hệ thống", component: <div>Khu vực cài đặt hệ thống</div> },
   {
-    label: "Security Settings",
-    component: <div>Security Settings Component</div>,
+    label: "Cài đặt bảo mật",
+    component: <div>Khu vực cài đặt bảo mật</div>,
   },
 ];
 
@@ -99,7 +99,7 @@ const AdminPanel = () => {
       >
         <div className="flex flex-col h-full">
           <div className="flex-shrink-0 px-6 py-4 bg-black text-white relative">
-            <h1 className="text-xl font-bold">Admin Panel</h1>
+            <h1 className="text-xl font-bold">Bảng quản trị</h1>
             <button
               className="md:hidden absolute top-4 right-4 p-2 text-white"
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -115,7 +115,7 @@ const AdminPanel = () => {
             <ul className="space-y-2">
               {sidebarItems.map(({ label, icon: Icon, component }, index) => (
                 <li key={index} className="relative group">
-                  {label === "Product Management" ? (
+                  {label === "Quản lý sản phẩm" ? (
                     <>
                       <button
                         className={`flex items-center w-full px-4 py-2 text-left text-white hover:bg-gray-600 rounded-md transition duration-300 ease-in-out transform hover:scale-105 text-sm md:text-base lg:text-lg ${
@@ -149,7 +149,7 @@ const AdminPanel = () => {
                         ))}
                       </ul>
                     </>
-                  ) : label === "Dashboard" ? (
+                  ) : label === "Bảng điều khiển" ? (
                     <button
                       className={`flex items-center w-full px-4 py-2 text-left text-white rounded-md transition duration-300 ease-in-out transform hover:scale-105 text-sm md:text-base lg:text-lg `}
                       onClick={() => setActiveComponent(component)}
@@ -157,7 +157,7 @@ const AdminPanel = () => {
                       <Icon className="h-6 w-6 mr-3" />
                       {label}
                     </button>
-                  ) : label === "User Management" ? (
+                  ) : label === "Quản lý người dùng" ? (
                     <>
                       <button
                         className={`flex items-center w-full px-4 py-2 text-left text-white rounded-md transition duration-300 ease-in-out transform hover:scale-105 text-sm md:text-base lg:text-lg   ${
@@ -191,7 +191,7 @@ const AdminPanel = () => {
                         ))}
                       </ul>
                     </>
-                  ) : label === "Order Management" ? (
+                  ) : label === "Quản lý đơn hàng" ? (
                     <>
                       <button
                         className={`flex items-center w-full px-4 py-2 text-left text-white rounded-md transition duration-300 ease-in-out transform hover:scale-105 text-sm md:text-base lg:text-lg   ${
@@ -225,7 +225,7 @@ const AdminPanel = () => {
                         ))}
                       </ul>
                     </>
-                  ) : label === "Settings" ? (
+                  ) : label === "Cài đặt" ? (
                     <>
                       <button
                         className={`flex items-center w-full px-4 py-2 text-left text-white rounded-md transition duration-300 ease-in-out transform hover:scale-105 text-sm md:text-base lg:text-lg   ${

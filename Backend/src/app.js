@@ -1,12 +1,52 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import { ApiError } from "./utils/ApiError.js";
 
 const app = express();
 
+const allowedOrigins = (process.env.CORS_ORIGIN || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: Number(process.env.RATE_LIMIT_MAX || 250),
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many requests. Please try again later.",
+  },
+});
+
+app.disable("x-powered-by");
+app.set("trust proxy", Number(process.env.TRUST_PROXY || 0));
+
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+  })
+);
+app.use(globalLimiter);
+
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: (origin, callback) => {
+      // Allow non-browser clients and same-origin requests with no origin header.
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new ApiError(403, "CORS origin not allowed"));
+    },
     credentials: true,
   })
 );
@@ -29,5 +69,17 @@ app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/orders", orderRoutes);
+
+// Centralized error response handler.
+app.use((err, req, res, next) => {
+  const statusCode = err instanceof ApiError ? err.statusCode : 500;
+  const message = err?.message || "Internal Server Error";
+
+  return res.status(statusCode).json({
+    success: false,
+    message,
+    errors: err?.errors || [],
+  });
+});
 
 export { app };

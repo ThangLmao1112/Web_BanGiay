@@ -29,7 +29,7 @@ const Checkout = () => {
         );
         setTotalAmount(total);
       } catch (err) {
-        setError("Failed to fetch cart items");
+        setError("Không thể tải giỏ hàng");
       }
     };
 
@@ -38,7 +38,7 @@ const Checkout = () => {
 
   const handleCheckout = async () => {
     if (!shippingAddress || !paymentMethod) {
-      setError("Please fill out shipping address and select a payment method.");
+      setError("Vui lòng nhập địa chỉ giao hàng và chọn phương thức thanh toán.");
       return;
     }
 
@@ -70,7 +70,7 @@ const Checkout = () => {
         });
       }
     } catch (error) {
-      setError("Failed to place the order. Please try again.");
+      setError("Đặt hàng thất bại. Vui lòng thử lại.");
     } finally {
       setLoading(false);
     }
@@ -78,15 +78,15 @@ const Checkout = () => {
 
   return (
     <div className="checkout-container max-w-screen-sm mx-auto p-5 mb-10">
-      <h1 className="text-3xl font-semibold mb-8 text-center">Checkout</h1>
+      <h1 className="text-3xl font-semibold mb-8 text-center">Thanh toán</h1>
 
       {error && <div className="text-red-500 mb-4">{error}</div>}
 
       <div className="mb-6">
-        <h2 className="text-xl font-semibold mb-4 ">Shipping Address</h2>
+        <h2 className="text-xl font-semibold mb-4 ">Địa chỉ giao hàng</h2>
         <Textarea
           variant="outlined"
-          label="Shipping Address"
+          label="Địa chỉ giao hàng"
           type="text"
           value={shippingAddress}
           onChange={(e) => setShippingAddress(e.target.value)}
@@ -95,22 +95,22 @@ const Checkout = () => {
       </div>
 
       <div className="mb-6">
-        <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
+        <h2 className="text-xl font-semibold mb-4">Phương thức thanh toán</h2>
         <Select
-          label="Payment Method"
+          label="Phương thức thanh toán"
           value={paymentMethod}
           onChange={(value) => setPaymentMethod(value)}
           className="w-full mb-3"
         >
-          <Option value="Credit Card">Credit Card</Option>
+          <Option value="Credit Card">Thẻ tín dụng</Option>
           <Option value="JazzCash">JazzCash</Option>
           <Option value="EasyPaisa">EasyPaisa</Option>
-          <Option value="Cash on Delivery">Cash on Delivery</Option>
+          <Option value="Cash on Delivery">Thanh toán khi nhận hàng</Option>
         </Select>
       </div>
 
       <div className="mb-6">
-        <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+        <h2 className="text-xl font-semibold mb-4">Tóm tắt đơn hàng</h2>
         {cartItems.map((item, index) => (
           <div
             key={`${item.productDetails._id}-${index}`}
@@ -121,7 +121,7 @@ const Checkout = () => {
           </div>
         ))}
         <div className="flex justify-between font-semibold text-lg mt-4">
-          <span>Total:</span>
+          <span>Tổng tiền:</span>
           <span>Rs {totalAmount}</span>
         </div>
       </div>
@@ -133,7 +133,7 @@ const Checkout = () => {
           loading && "opacity-50 cursor-not-allowed"
         }`}
       >
-        {loading ? "Processing..." : "Place Order"}
+        {loading ? "Đang xử lý..." : "Đặt hàng"}
       </Button>
     </div>
   );

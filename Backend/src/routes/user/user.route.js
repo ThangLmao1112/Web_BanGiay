@@ -1,4 +1,5 @@
 import { Router } from "express";
+import rateLimit from "express-rate-limit";
 import {
   getAllUsers,
   getMostActiveUsers,
@@ -6,6 +7,7 @@ import {
   getUserFirstName,
   loginUser,
   logoutUser,
+  refreshAccessToken,
   registerUser,
   removeUser,
 } from "../../controllers/user/user.controller.js";
@@ -14,14 +16,26 @@ import { verifyAdmin } from "../../middleware/isAdmin.middleware.js";
 
 const router = Router();
 
-router.route("/register").post(registerUser);
-router.route("/login").post(loginUser);
+const authLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: Number(process.env.AUTH_RATE_LIMIT_MAX || 25),
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many authentication attempts. Please try again later.",
+  },
+});
+
+router.route("/register").post(authLimiter, registerUser);
+router.route("/login").post(authLimiter, loginUser);
+router.route("/refresh-token").post(authLimiter, refreshAccessToken);
 router.route("/logout").post(verifyJWT, logoutUser);
 router.route("/get-user-first-name").get(verifyJWT, getUserFirstName);
-router.route("/get-user-details").get(verifyAdmin, verifyJWT, getUserDetails);
-router.route("/get-all-users").get(verifyAdmin, verifyJWT, getAllUsers);
+router.route("/get-user-details").get(verifyJWT, verifyAdmin, getUserDetails);
+router.route("/get-all-users").get(verifyJWT, verifyAdmin, getAllUsers);
 router
   .route("/most-active-users")
-  .get(verifyAdmin, verifyJWT, getMostActiveUsers);
-router.route("/remove-user/:userId").delete(verifyAdmin, verifyJWT, removeUser);
+  .get(verifyJWT, verifyAdmin, getMostActiveUsers);
+router.route("/remove-user/:userId").delete(verifyJWT, verifyAdmin, removeUser);
 export default router;

@@ -15,6 +15,14 @@ import LoadingOverlay from "./LoadingOverlay";
 
 const API_URL = "/api/products";
 
+const SUBCATEGORY_LABELS = {
+  Sandals: "Sandal",
+  Slippers: "Dép",
+  Shoes: "Giày",
+  Sneakers: "Sneaker",
+  Pumps: "Giày cao gót",
+};
+
 const AddProductForm = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -101,25 +109,25 @@ const AddProductForm = () => {
   const validateForm = () => {
     let newErrors = {};
 
-    if (!formData.name.trim()) newErrors.name = "Product name is required.";
-    if (!formData.category.trim()) newErrors.category = "Category is required.";
+    if (!formData.name.trim()) newErrors.name = "Tên sản phẩm là bắt buộc.";
+    if (!formData.category.trim()) newErrors.category = "Danh mục là bắt buộc.";
     if (!formData.subcategory.trim())
-      newErrors.subcategory = "Sub-Category is required.";
+      newErrors.subcategory = "Danh mục con là bắt buộc.";
 
     if (!formData.price || isNaN(formData.price) || formData.price <= 0)
-      newErrors.price = "Price must be a positive number.";
+      newErrors.price = "Giá phải là số dương.";
 
     if (!formData.stock || isNaN(formData.stock) || formData.stock < 0)
-      newErrors.stock = "Stock must be a non-negative number.";
+      newErrors.stock = "Tồn kho phải là số không âm.";
 
     if (!formData.sizes.length)
-      newErrors.sizes = "At least one size is required.";
+      newErrors.sizes = "Cần nhập ít nhất một kích cỡ.";
 
     if (!formData.availableColors.length)
-      newErrors.availableColors = "At least one color is required.";
+      newErrors.availableColors = "Cần nhập ít nhất một màu.";
 
     if (imageColorPairs.some((pair) => !pair.image || !pair.color))
-      newErrors.imageColorPairs = "Each image must have a corresponding color.";
+      newErrors.imageColorPairs = "Mỗi ảnh phải có màu tương ứng.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -174,7 +182,7 @@ const AddProductForm = () => {
 
     try {
       await addProduct(formData);
-      SuccessToast("Product added successfully!");
+      SuccessToast("Thêm sản phẩm thành công!");
 
       setFormData({
         name: "",
@@ -194,7 +202,7 @@ const AddProductForm = () => {
       setSelectedFiles([null, null]);
       setErrors({});
     } catch (error) {
-      ErrorToast("Error adding product. Please try again.");
+      ErrorToast("Thêm sản phẩm thất bại. Vui lòng thử lại.");
     } finally {
       setLoading(false);
     }
@@ -207,7 +215,7 @@ const AddProductForm = () => {
   return (
     <div className="max-w-2xl mx-auto p-8 bg-white shadow-lg rounded-lg">
       {loading && <LoadingOverlay />}
-      <h2 className="text-2xl font-bold mb-6 text-center">Add New Product</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center">Thêm sản phẩm mới</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <Input
@@ -217,9 +225,9 @@ const AddProductForm = () => {
             className="w-full px-4 py-2"
             onChange={handleChange}
             variant="outlined"
-            label="Product Name"
+            label="Tên sản phẩm"
             size="lg"
-            placeholder="Name of the product"
+            placeholder="Nhập tên sản phẩm"
             value={formData.name}
             required
           />
@@ -234,7 +242,7 @@ const AddProductForm = () => {
             className="w-full px-4 py-2"
             onChange={handleChange}
             variant="outlined"
-            label="Description"
+            label="Mô tả"
             size="lg"
             value={formData.description}
           />
@@ -255,7 +263,7 @@ const AddProductForm = () => {
                 : "bg-gray-400"
             }`}
           >
-            Gents Footwear
+            Giày nam
           </Button>
           <Button
             type="Button"
@@ -267,7 +275,7 @@ const AddProductForm = () => {
                 : "bg-gray-400"
             }`}
           >
-            Ladies Footwear
+            Giày nữ
           </Button>
         </div>
         {errors.category && (
@@ -276,7 +284,7 @@ const AddProductForm = () => {
 
         <div>
           <Select
-            label="Select Subcategory"
+            label="Chọn danh mục con"
             name="subcategory"
             value={formData.subcategory}
             onChange={(e) =>
@@ -287,7 +295,7 @@ const AddProductForm = () => {
           >
             {availableSubcategories.map((subcategory) => (
               <Option key={subcategory} value={subcategory}>
-                {subcategory}
+                {SUBCATEGORY_LABELS[subcategory] || subcategory}
               </Option>
             ))}
           </Select>
@@ -304,9 +312,9 @@ const AddProductForm = () => {
             className="w-full px-4 py-2"
             onChange={handleChange}
             variant="outlined"
-            label="Price"
+            label="Giá"
             size="lg"
-            placeholder="Price of the product"
+            placeholder="Nhập giá sản phẩm"
             value={formData.price}
             min="0"
             required
@@ -324,9 +332,9 @@ const AddProductForm = () => {
             className="w-full px-4 py-2"
             onChange={handleChange}
             variant="outlined"
-            label="Stock"
+            label="Tồn kho"
             size="lg"
-            placeholder="Stock of the product"
+            placeholder="Nhập số lượng tồn kho"
             value={formData.stock}
             min="0"
             required
@@ -344,9 +352,9 @@ const AddProductForm = () => {
             className="w-full px-4 py-2"
             onChange={handleSizesChange}
             variant="outlined"
-            label="Sizes (Comma Separated)"
+            label="Kích cỡ (cách nhau bằng dấu phẩy)"
             size="lg"
-            placeholder="e.g. 39, 42, 45"
+            placeholder="Ví dụ: 39, 42, 45"
             value={formData.sizes.join(", ")}
             required
           />
@@ -363,9 +371,9 @@ const AddProductForm = () => {
             className="w-full px-4 py-2"
             onChange={handleAvailableColorsChange}
             variant="outlined"
-            label="Available Colors (Comma Separated)"
+            label="Màu có sẵn (cách nhau bằng dấu phẩy)"
             size="lg"
-            placeholder="e.g., Red, Blue, Green"
+            placeholder="Ví dụ: Đỏ, Xanh dương, Xanh lá"
             value={formData.availableColors.join(", ")}
             required
           />
@@ -376,9 +384,9 @@ const AddProductForm = () => {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Upload Images with Colors{" "}
+            Tải ảnh lên kèm màu{" "}
             <span className="text-blue-500">
-              (At least two images can be selected)
+              (Có thể chọn tối thiểu hai ảnh)
             </span>
           </label>
           {imageColorPairs.map((pair, index) => (
@@ -435,7 +443,7 @@ const AddProductForm = () => {
                      d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
                    />
                  </svg>
-                 Upload Files
+                 Tải tệp lên
                </label>
              </Button>
              
@@ -453,9 +461,9 @@ const AddProductForm = () => {
                 onChange={(e) => handleColorChange(index, e.target.value)}
                 className="w-full px-4 py-2"
                 variant="outlined"
-                label="Color"
+                label="Màu"
                 size="lg"
-                placeholder="Color"
+                placeholder="Nhập màu"
                 required
               />
               {errors[`imageColorPairs.${index}.color`] && (
@@ -470,7 +478,7 @@ const AddProductForm = () => {
             onClick={handleAddImageColorPair}
             className="bg-gray-300 hover:bg-gray-400 text-black py-2 px-4 rounded-md transition-colors"
           >
-            Add Another Image
+            Thêm ảnh khác
           </Button>
         </div>
         <div>
@@ -478,7 +486,7 @@ const AddProductForm = () => {
             type="submit"
             className="w-full bg-black hover:bg-gray-700 text-white py-2 px-4 rounded-md transition-colors"
           >
-            Add Product
+            Thêm sản phẩm
           </Button>
         </div>
       </form>

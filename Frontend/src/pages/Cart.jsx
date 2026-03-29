@@ -22,7 +22,7 @@ const Cart = () => {
   useEffect(() => {
     const fetchCartItems = async () => {
       if (!userId) {
-        setError("User ID not found");
+        setError("Không tìm thấy ID người dùng");
         setLoading(false);
         return;
       }
@@ -40,10 +40,10 @@ const Cart = () => {
           setError(null);
         } else {
           setCartItems([]);
-          setError("Unexpected response structure");
+          setError("Dữ liệu phản hồi không đúng định dạng");
         }
       } catch (error) {
-        setError("Failed to fetch cart items");
+        setError("Không thể tải giỏ hàng");
         console.error(error);
       } finally {
         setLoading(false);
@@ -63,19 +63,19 @@ const Cart = () => {
         status = {
           textColor: "text-red-500",
           circleColor: "bg-red-500",
-          text: "Limited stock available",
+          text: "Số lượng tồn kho có hạn",
         };
       } else if (product.stock >= 15 && product.stock < 30) {
         status = {
           textColor: "text-yellow-500",
           circleColor: "bg-yellow-500",
-          text: "Stock running low",
+          text: "Tồn kho sắp hết",
         };
       } else {
         status = {
           textColor: "text-green-500",
           circleColor: "bg-green-500",
-          text: "In stock",
+          text: "Còn hàng",
         };
       }
       setInventoryStatus(status);
@@ -93,7 +93,7 @@ const Cart = () => {
         }
       );
 
-      SuccessToast("Item removed");
+      SuccessToast("Đã xóa sản phẩm khỏi giỏ hàng");
 
       setCartItems((prevItems) => {
         const updatedItems = prevItems.filter(
@@ -105,8 +105,8 @@ const Cart = () => {
         return updatedItems;
       });
     } catch (error) {
-      setError("Failed to delete item from cart");
-      ErrorToast("Failed to delete item from cart");
+      setError("Không thể xóa sản phẩm khỏi giỏ hàng");
+      ErrorToast("Không thể xóa sản phẩm khỏi giỏ hàng");
       console.error(error);
     }
   };
@@ -131,7 +131,7 @@ const Cart = () => {
   return (
     <div className="max-w-screen-2xl mx-auto p-5">
       {error && <div className="text-center p-5 text-red-500">{error}</div>}
-      <h1 className="text-3xl font-semibold mb-5 text-center">Your Cart</h1>
+      <h1 className="text-3xl font-semibold mb-5 text-center">Giỏ hàng của bạn</h1>
 
       {cartItems.length > 0 ? (
         <div className="flex flex-col space-y-4">
@@ -164,19 +164,19 @@ const Cart = () => {
                 </div>
 
                 <p className="font-semibold text-gray-700 text-sm">
-                  Color:
+                  Màu:
                   <span className="font-normal"> {item.color}</span>
                 </p>
                 <p className="font-semibold text-gray-700 text-sm">
-                  Size:
+                  Kích cỡ:
                   <span className="font-normal"> {item.size}</span>
                 </p>
                 <p className="font-semibold text-gray-700 text-sm">
-                  Quantity:
+                  Số lượng:
                   <span className="font-normal"> {item.quantity}</span>
                 </p>
                 <p className="text-gray-700 font-bold mt-2">
-                  Price: Rs {item.productDetails.price * item.quantity}
+                  Giá: Rs {item.productDetails.price * item.quantity}
                 </p>
               </div>
 
@@ -188,21 +188,21 @@ const Cart = () => {
                   }
                   className="border"
                 >
-                  Update
+                  Cập nhật
                 </Button>
                 <Button
                   variant="text"
                   onClick={() => handleDeleteItem(item.product)}
                   className="border"
                 >
-                  Remove
+                  Xóa
                 </Button>
               </div>
             </div>
           ))}
         </div>
       ) : (
-        <div className="text-center text-gray-500">Your cart is empty.</div>
+        <div className="text-center text-gray-500">Giỏ hàng của bạn đang trống.</div>
       )}
 
       {cartItems.length > 0 && (
@@ -211,7 +211,7 @@ const Cart = () => {
             onClick={handleCheckout}
             className="bg-gray-800 text-white px-6 py-3 rounded hover:bg-gray-900 transition-all duration-300 ease-in-out"
           >
-            Checkout
+            Thanh toán
           </Button>
         </div>
       )}

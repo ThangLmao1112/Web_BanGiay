@@ -7,7 +7,7 @@ const MostActiveUsers = () => {
   return (
     <div className="p-4">
       <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-4 text-center">
-        Most Active Users
+        Người dùng hoạt động nhiều nhất
       </h1>
       <UserList showFullDetails={false} showActivityScore={false} />
       <ToastContainer />

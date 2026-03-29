@@ -22,7 +22,7 @@ const Home = () => {
       <CarouselCustom />
       <div>
         <div>
-          <h1 className="text-center text-3xl mt-5 mb-3">What's New</h1>
+          <h1 className="text-center text-3xl mt-5 mb-3">Có gì mới</h1>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4 cursor-pointer">
           {/* Image 1 */}
@@ -32,7 +32,7 @@ const Home = () => {
               alt="Placeholder 1"
               className="rounded-full w-[8rem] h-[8rem] sm:w-[10rem] sm:h-[10rem] md:w-[12rem] md:h-[12rem] object-cover transition-transform duration-300 hover:scale-105"
             />
-            <p className="mt-2 text-sm sm:text-md font-medium">Shoes</p>
+            <p className="mt-2 text-sm sm:text-md font-medium">Giày</p>
           </div>
 
           {/* Image 2 */}
@@ -42,7 +42,7 @@ const Home = () => {
               alt="Placeholder 2"
               className="rounded-full w-[8rem] h-[8rem] sm:w-[10rem] sm:h-[10rem] md:w-[12rem] md:h-[12rem] object-cover transition-transform duration-300 hover:scale-105"
             />
-            <p className="mt-2 text-sm sm:text-md font-medium">Sandals</p>
+            <p className="mt-2 text-sm sm:text-md font-medium">Sandal</p>
           </div>
 
           {/* Image 3 */}
@@ -52,7 +52,7 @@ const Home = () => {
               alt="Placeholder 3"
               className="rounded-full w-[8rem] h-[8rem] sm:w-[10rem] sm:h-[10rem] md:w-[12rem] md:h-[12rem] object-cover transition-transform duration-300 hover:scale-105"
             />
-            <p className="mt-2 text-sm sm:text-md font-medium">Pumps</p>
+            <p className="mt-2 text-sm sm:text-md font-medium">Giày cao gót</p>
           </div>
 
           {/* Image 4 */}
@@ -62,7 +62,7 @@ const Home = () => {
               alt="Placeholder 4"
               className="rounded-full w-[8rem] h-[8rem] sm:w-[10rem] sm:h-[10rem] md:w-[12rem] md:h-[12rem] object-cover transition-transform duration-300 hover:scale-105"
             />
-            <p className="mt-2 text-sm sm:text-md font-medium">Slipper</p>
+            <p className="mt-2 text-sm sm:text-md font-medium">Dép</p>
           </div>
 
           {/* Image 5 */}
@@ -72,12 +72,12 @@ const Home = () => {
               alt="Placeholder 5"
               className="rounded-full w-[8rem] h-[8rem] sm:w-[10rem] sm:h-[10rem] md:w-[12rem] md:h-[12rem] object-cover transition-transform duration-300 hover:scale-105"
             />
-            <p className="mt-2 text-sm sm:text-md font-medium">Sneakers</p>
+            <p className="mt-2 text-sm sm:text-md font-medium">Sneaker</p>
           </div>
         </div>
       </div>
       <div className="">
-        <h1 className="text-center text-3xl mt-5 mb-3">Insta Fusion</h1>
+        <h1 className="text-center text-3xl mt-5 mb-3">Xu hướng nổi bật</h1>
         {/* Video Elements in a Scrollable Row */}
         <div className="overflow-x-scroll hide-scroll-bar p-4 px-5 sm:px-10 md:px-20">
           <div className="flex space-x-4">
@@ -183,7 +183,7 @@ const Home = () => {
         </div>
       </div>
       <div className="">
-        <h1 className="text-center text-3xl mt-5 mb-3">Best Sellers</h1>
+        <h1 className="text-center text-3xl mt-5 mb-3">Bán chạy nhất</h1>
         <div className="">
           <MostRatedProducts />
         </div>
@@ -201,8 +201,8 @@ const Home = () => {
 
           {/* Text Content */}
           <h1 className="relative text-center text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold leading-tight px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 text-white drop-shadow-lg">
-            Contemporary Fashion, Weekly Updates. Premium Quality and Timely
-            Dispatch
+            Thời trang hiện đại, cập nhật mỗi tuần. Chất lượng cao cấp, giao
+            hàng đúng hẹn
           </h1>
         </div>
 
@@ -219,13 +219,13 @@ const Home = () => {
           <div className="flex-1 w-full lg:w-2/3">
             <p className="text-base md:text-lg lg:text-xl xl:text-2xl font-light text-gray-700 leading-relaxed">
               <span className="font-semibold">
-                Discover Timeless Elegance and Modern Comfort.
+                Khám phá vẻ thanh lịch vượt thời gian và sự thoải mái hiện đại.
               </span>{" "}
-              Explore our curated collection of premium fashion essentials
-              designed to offer exceptional style and unparalleled quality. Each
-              piece is crafted with meticulous attention to detail and delivered
-              with prompt service, ensuring that you experience both
-              sophistication and convenience in every purchase.
+              Khám phá bộ sưu tập thời trang cao cấp được tuyển chọn kỹ lưỡng,
+              mang đến phong cách nổi bật và chất lượng khác biệt. Mỗi sản phẩm
+              đều được chăm chút tỉ mỉ trong từng chi tiết và phục vụ nhanh
+              chóng, giúp bạn tận hưởng sự tinh tế lẫn tiện lợi trong mọi lần mua
+              sắm.
             </p>
           </div>
         </div>
@@ -239,11 +239,11 @@ const Home = () => {
         <section className="py-20 mx-auto container px-8 bg-gray-900 rounded-2xl mb-20">
           <div className="grid lg:grid-cols-2 grid-cols-1 gap-4 !items-center">
             <p className="text-white !font-semibold">
-              Stay in the Know: Subscribe for Exclusive Updates
+              Luôn cập nhật: Đăng ký để nhận tin độc quyền
               <span className="lg:inline-block font-thin">
-                Get first access to exclusive offers, product launches, and
-                expert tips. Stay informed and ahead—subscribe now for updates
-                tailored just for you!
+                Nhận quyền truy cập sớm vào ưu đãi độc quyền, sản phẩm mới ra
+                mắt và các mẹo hữu ích. Đăng ký ngay để luôn dẫn đầu với những
+                cập nhật dành riêng cho bạn!
               </span>
             </p>
             <div
@@ -251,11 +251,11 @@ const Home = () => {
             >
               <Input
                 color="white"
-                label="Enter your email"
+                label="Nhập email của bạn"
                 className="text-white border-white"
               />
               <Button className="flex-shrink-0 md:w-fit w-full bg-white text-black">
-                subscribe
+                Đăng ký
               </Button>
             </div>
           </div>

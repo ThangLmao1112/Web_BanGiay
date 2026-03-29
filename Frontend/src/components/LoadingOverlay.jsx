@@ -6,10 +6,10 @@ const LoadingOverlay = () => (
       <div className="relative flex items-center justify-center">
         <div className="w-16 h-16 border-t-4 border-black border-solid rounded-full animate-spin"></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-lg">
-          Loading...
+          Đang tải...
         </div>
       </div>
-      <p className="mt-2 text-white text-lg">Please wait...</p>
+      <p className="mt-2 text-white text-lg">Vui lòng chờ...</p>
     </div>
   </div>
 );

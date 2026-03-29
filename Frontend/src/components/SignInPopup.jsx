@@ -11,23 +11,23 @@ const SignInPopup = ({ onClose }) => {
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full transform transition-transform duration-300 animate-popup">
         <div className="flex items-center mb-4">
           <FaExclamationCircle className="text-red-500 text-2xl mr-2" />
-          <h2 className="text-xl font-semibold">Sign In Required</h2>
+          <h2 className="text-xl font-semibold">Cần đăng nhập</h2>
         </div>
         <p className="mb-4">
-          You need to sign in to submit a comment. Please log in to continue.
+          Bạn cần đăng nhập để gửi bình luận. Vui lòng đăng nhập để tiếp tục.
         </p>
         <div className="flex justify-end space-x-2">
           <button
             onClick={onNavigate}
             className="bg-gray-800 hover:bg-black text-white py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105"
           >
-            Sign In
+            Đăng nhập
           </button>
           <button
             onClick={onClose}
             className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105"
           >
-            Close
+            Đóng
           </button>
         </div>
       </div>

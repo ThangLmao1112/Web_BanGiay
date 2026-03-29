@@ -24,19 +24,19 @@ import avatarGif from "../assets/womangif.gif";
 import avatarGif2 from "../assets/boypic.avif";
 const profileMenuItemsBase = [
   {
-    label: "My Profile",
+    label: "Hồ sơ của tôi",
     icon: FaUserCircle,
   },
   {
-    label: "Edit Profile",
+    label: "Chỉnh sửa hồ sơ",
     icon: FaCog,
   },
   {
-    label: "Inbox",
+    label: "Hộp thư",
     icon: AiOutlineDownload,
   },
   {
-    label: "Help",
+    label: "Trợ giúp",
     icon: IoHelpCircleSharp,
   },
 ];
@@ -64,19 +64,19 @@ const AvatarWithUserDropdown = () => {
   const handleLogout = async () => {
     try {
       await axios.post("/api/users/logout");
-      toast.success("Logged out successfully!");
+      toast.success("Đăng xuất thành công!");
       localStorage.removeItem("token");
       navigate("/login");
     } catch (error) {
       console.error("Error logging out:", error);
-      toast.error("Error logging out. Please try again.");
+      toast.error("Đăng xuất thất bại. Vui lòng thử lại.");
     }
   };
   
   const handleMenuItemClick = (label) => {
-    if (label === "Sign Out") {
+    if (label === "Đăng xuất") {
       handleLogout();
-    } else if (label === "Admin Panel") {
+    } else if (label === "Bảng quản trị") {
       navigate("/adminPanel");
     }
     closeMenu();
@@ -88,19 +88,19 @@ const AvatarWithUserDropdown = () => {
     ...(isAdmin
       ? [
           {
-            label: "Admin Panel",
+            label: "Bảng quản trị",
             icon: RiShieldCheckFill,
           },
         ]
       : []),
     {
-      label: "Sign Out",
+      label: "Đăng xuất",
       icon: FaPowerOff,
     },
   ];
 
   const filteredMenuItems = isAdmin
-    ? profileMenuItems.filter((item) => item.label !== "Help")
+    ? profileMenuItems.filter((item) => item.label !== "Trợ giúp")
     : profileMenuItems;
 
   return (
@@ -129,14 +129,14 @@ const AvatarWithUserDropdown = () => {
               key={label}
               onClick={() => handleMenuItemClick(label)}
               className={`flex items-center gap-2 rounded ${
-                label === "Sign Out"
+                label === "Đăng xuất"
                   ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
                   : ""
               }`}
             >
               {React.createElement(icon, {
                 className: `h-4 w-4 ${
-                  label === "Sign Out" ? "text-red-500" : ""
+                  label === "Đăng xuất" ? "text-red-500" : ""
                 }`,
                 strokeWidth: 2,
               })}
@@ -144,7 +144,7 @@ const AvatarWithUserDropdown = () => {
                 as="span"
                 variant="small"
                 className="font-normal"
-                color={label === "Sign Out" ? "red" : "inherit"}
+                color={label === "Đăng xuất" ? "red" : "inherit"}
               >
                 {label}
               </Typography>

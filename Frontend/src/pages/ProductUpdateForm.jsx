@@ -36,7 +36,7 @@ const ProductUpdateForm = ({ productId, onClose }) => {
           stock: productData.stock,
         });
       } catch (err) {
-        setError("Failed to fetch product data.");
+        setError("Không thể tải dữ liệu sản phẩm.");
       }
     };
 
@@ -69,11 +69,11 @@ const ProductUpdateForm = ({ productId, onClose }) => {
         `/api/products/update-product-details/${productId}`,
         formData
       );
-      SuccessToast("Product updated successfully");
+      SuccessToast("Cập nhật sản phẩm thành công");
       onClose();
     } catch (err) {
-      setError("Failed to update product.");
-      ErrorToast("Failed to update product.");
+      setError("Cập nhật sản phẩm thất bại.");
+      ErrorToast("Cập nhật sản phẩm thất bại.");
     } finally {
       setLoading(false);
     }
@@ -82,7 +82,7 @@ const ProductUpdateForm = ({ productId, onClose }) => {
   return (
     <div className="p-4 max-w-lg mx-auto bg-white rounded shadow-lg">
       {loading && <LoadingOverlay />}
-      <h2 className="text-xl font-bold mb-4">Update Product</h2>
+      <h2 className="text-xl font-bold mb-4">Cập nhật sản phẩm</h2>
       {error && <p className="text-red-500">{error}</p>}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -90,7 +90,7 @@ const ProductUpdateForm = ({ productId, onClose }) => {
             htmlFor="name"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
-            Product Name
+              Tên sản phẩm
           </label>
           <input
             type="text"
@@ -107,7 +107,7 @@ const ProductUpdateForm = ({ productId, onClose }) => {
             htmlFor="description"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
-            Description
+              Mô tả
           </label>
           <textarea
             id="description"
@@ -124,7 +124,7 @@ const ProductUpdateForm = ({ productId, onClose }) => {
             htmlFor="price"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
-            Price
+              Giá
           </label>
           <input
             type="number"
@@ -142,7 +142,7 @@ const ProductUpdateForm = ({ productId, onClose }) => {
             htmlFor="sizes"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
-            Sizes (comma separated)
+              Kích cỡ (cách nhau bằng dấu phẩy)
           </label>
           <input
             type="text"
@@ -159,7 +159,7 @@ const ProductUpdateForm = ({ productId, onClose }) => {
             htmlFor="availableColors"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
-            Available Colors (comma separated)
+              Màu có sẵn (cách nhau bằng dấu phẩy)
           </label>
           <input
             type="text"
@@ -177,7 +177,7 @@ const ProductUpdateForm = ({ productId, onClose }) => {
             htmlFor="category"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
-            Category
+              Danh mục
           </label>
           <input
             type="text"
@@ -195,7 +195,7 @@ const ProductUpdateForm = ({ productId, onClose }) => {
             htmlFor="stock"
             className="block text-gray-700 text-sm font-bold mb-2"
           >
-            Stock
+              Tồn kho
           </label>
           <input
             type="number"
@@ -212,14 +212,14 @@ const ProductUpdateForm = ({ productId, onClose }) => {
             className="bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded"
             onClick={onClose}
           >
-            Cancel
+            Hủy
           </button>
           <button
             type="submit"
             className="bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded"
             disabled={loading}
           >
-            {loading ? "Updating..." : "Update"}
+            {loading ? "Đang cập nhật..." : "Cập nhật"}
           </button>
         </div>
       </form>

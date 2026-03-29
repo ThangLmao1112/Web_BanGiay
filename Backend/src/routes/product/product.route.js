@@ -28,19 +28,19 @@ router.route("/most-rated-products").get(getMostRatedProducts);
 //Secure Routes
 router
   .route("/add-product")
-  .post(upload.array("images", 20), verifyAdmin, verifyJWT, addProduct);
+  .post(upload.array("images", 20), verifyJWT, verifyAdmin, addProduct);
 router
   .route("/remove-product/:productId")
-  .delete(verifyAdmin, verifyJWT, removeProduct);
+  .delete(verifyJWT, verifyAdmin, removeProduct);
 router
   .route("/update-product-details/:productId")
-  .patch(verifyAdmin, verifyJWT, updateProductDetails);
+  .patch(verifyJWT, verifyAdmin, updateProductDetails);
 router
   .route("/update-product-images/:productId")
   .patch(
     upload.array("images", 20),
-    verifyAdmin,
     verifyJWT,
+    verifyAdmin,
     updateProductImagesAndColors
   );
 

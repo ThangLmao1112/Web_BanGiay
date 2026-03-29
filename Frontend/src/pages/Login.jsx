@@ -32,12 +32,12 @@ const Login = () => {
 
       const { token } = response.data;
       localStorage.setItem("token", token);
-      SuccessToast("Login successful!");
+      SuccessToast("Đăng nhập thành công!");
       setFormData({ email: "", password: "" });
       navigate(lastPath || "/");
     } catch (error) {
       console.error(error);
-      ErrorToast("Error logging in. Please check your credentials.");
+      ErrorToast("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
     } finally {
       setLoading(false);
     }
@@ -48,7 +48,7 @@ const Login = () => {
       <ToastContainer />
       <div className="w-full max-w-md p-6 bg-white shadow-md rounded-lg">
         <Typography variant="h4" className="text-center mb-6">
-          Log In
+          Đăng nhập
         </Typography>
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
@@ -60,7 +60,7 @@ const Login = () => {
             variant="outlined"
             size="lg"
             color="blue"
-            placeholder="Enter your email"
+            placeholder="Nhập email của bạn"
             required
           />
           <Input
@@ -68,11 +68,11 @@ const Login = () => {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            label="Password"
+            label="Mật khẩu"
             variant="outlined"
             size="lg"
             color="blue"
-            placeholder="Enter your password"
+            placeholder="Nhập mật khẩu"
             required
           />
           <Button
@@ -85,7 +85,7 @@ const Login = () => {
                 <div className="w-6 h-6 border-4 border-blue-600 border-t-transparent border-solid rounded-full animate-spin"></div>
               </div>
             ) : (
-              "Log In"
+              "Đăng nhập"
             )}
           </Button>
         </form>

@@ -6,24 +6,24 @@ import MapComponent from "../components/MapComponent";
 const teamMembers = [
   {
     name: "Syed Hisham Shah",
-    role: "Founder & CEO",
+    role: "Nhà sáng lập & CEO",
     image: myImage, 
     description:
-      "Syed Hisham Shah is an experienced entrepreneur in the ecommerce industry, focusing on providing top-notch footwear solutions. With over 10 years of experience, he has a strong background in retail and digital marketing.",
+      "Syed Hisham Shah là doanh nhân giàu kinh nghiệm trong lĩnh vực thương mại điện tử, tập trung mang đến các giải pháp giày dép chất lượng cao. Với hơn 10 năm kinh nghiệm, anh có nền tảng vững chắc về bán lẻ và tiếp thị số.",
   },
   {
     name: "Maaz Shinwari",
-    role: "Head of Design",
+    role: "Trưởng bộ phận thiết kế",
     image: "https://via.placeholder.com/150",
     description:
-      "Maaz Shinwari leads the design team with creativity and precision. Her expertise in product design ensures that our footwear not only looks great but also delivers on comfort and durability.",
+      "Maaz Shinwari dẫn dắt đội ngũ thiết kế bằng sự sáng tạo và chỉn chu. Chuyên môn của cô đảm bảo sản phẩm không chỉ đẹp mà còn thoải mái và bền bỉ.",
   },
   {
     name: "Sherjan",
-    role: "Marketing Specialist",
+    role: "Chuyên gia marketing",
     image: "https://via.placeholder.com/150",
     description:
-      "Sherjan is a marketing expert with a deep understanding of ecommerce trends. His innovative strategies help us reach a global audience, ensuring customer satisfaction.",
+      "Sherjan là chuyên gia marketing với sự am hiểu sâu về xu hướng thương mại điện tử. Các chiến lược sáng tạo của anh giúp chúng tôi tiếp cận khách hàng rộng hơn và nâng cao trải nghiệm mua sắm.",
   },
 ];
 
@@ -36,20 +36,21 @@ const AboutUs = () => {
       <div className="container mx-auto">
         <div className="mb-12 text-center">
           <h2 className="text-3xl lg:text-5xl font-bold mb-6">
-            About The Shoe Shop
+            Về The Shoe Shop
           </h2>
           <p className="max-w-2xl mx-auto text-sm lg:text-lg">
-            At The Shoe Shop, we are dedicated to providing high-quality footwear
-            for both men and women. From trendy sneakers to classic pumps, our
-            collection is curated to cater to all tastes and needs. We focus on
-            comfort, style, and durability to ensure our customers walk with
-            confidence.
+            Tại The Shoe Shop, chúng tôi cam kết mang đến các sản phẩm giày dép
+            chất lượng cao cho cả nam và nữ. Từ sneaker hợp xu hướng đến giày
+            cao gót cổ điển, bộ sưu tập của chúng tôi được chọn lọc để phù hợp
+            với nhiều phong cách và nhu cầu khác nhau. Chúng tôi ưu tiên sự
+            thoải mái, thời trang và độ bền để khách hàng luôn tự tin trong mỗi
+            bước chân.
           </p>
         </div>
 
         <div className="mb-16">
           <h3 className="text-2xl lg:text-4xl font-semibold mb-8 text-center">
-            Meet Our Team
+            Đội ngũ của chúng tôi
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
             {teamMembers.map((member) => (
@@ -74,19 +75,19 @@ const AboutUs = () => {
 
         <div className="mb-16 text-center">
           <h3 className="text-2xl lg:text-4xl font-semibold mb-8">
-            Our Core Values
+            Giá trị cốt lõi
           </h3>
           <p className="max-w-2xl mx-auto text-sm lg:text-lg">
-            As a team, we are committed to delivering exceptional service,
-            innovation, and sustainability in the footwear industry. Our goal is
-            to ensure every customer finds the perfect fit and feels empowered
-            by their choices.
+            Với tư cách một tập thể, chúng tôi cam kết mang đến dịch vụ xuất
+            sắc, đổi mới liên tục và phát triển bền vững trong ngành giày dép.
+            Mục tiêu của chúng tôi là giúp mọi khách hàng tìm được lựa chọn phù
+            hợp nhất và tự tin với quyết định của mình.
           </p>
         </div>
 
         <div className="mb-16 text-center">
           <h3 className="text-2xl lg:text-4xl font-semibold mb-8">
-            Find Us
+            Tìm chúng tôi
           </h3>
           <div className="h-96 bg-gray-300 rounded-lg flex items-center justify-center">
             <MapComponent /> 

@@ -3,33 +3,33 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 
 const SITEMAP = [
   {
-    title: "Company",
+    title: "Công ty",
     links: [
-      { label: "About Us", path: "/aboutUs" },
-      { label: "Find Us", path: "/findUs" },
+      { label: "Về chúng tôi", path: "/aboutUs" },
+      { label: "Tìm cửa hàng", path: "/findUs" },
     ],
   },
   {
-    title: "Help Center",
+    title: "Hỗ trợ",
     links: [
       { label: "Instagram", path: "https://www.instagram.com/syedhishamshah" },
       { label: "GitHub", path: "https://github.com/syedhisham" },
-      { label: "Contact Us", path: "/contactUs" },
+      { label: "Liên hệ", path: "/contactUs" },
     ],
   },
   {
-    title: "Resources",
+    title: "Danh mục",
     links: [
-      { label: "Sale", path: "/sale" },
-      { label: "Gents New Arrivals", path: "/gentsNewArrivals" },
-      { label: "Ladies New Arrivals", path: "/ladiesNewArrivals" },
+      { label: "Khuyến mãi", path: "/sale" },
+      { label: "Hàng mới nam", path: "/gentsNewArrivals" },
+      { label: "Hàng mới nữ", path: "/ladiesNewArrivals" },
     ],
   },
   {
-    title: "Products",
+    title: "Sản phẩm",
     links: [
-      { label: "Gents Footwear", path: "/gentsFootwear" },
-      { label: "Ladies Footwear", path: "/ladiesFootwear" },
+      { label: "Giày nam", path: "/gentsFootwear" },
+      { label: "Giày nữ", path: "/ladiesFootwear" },
     ],
   },
 ];
@@ -98,8 +98,8 @@ const Footer = () => {
         </div>
         <div className="flex w-full flex-col items-center justify-center border-t border-blue-gray-200 py-4 md:flex-row md:justify-between">
           <p className="mb-4 text-center font-normal text-gray-500 md:mb-0 text-sm">
-            &copy; {currentYear} <a href="/">The Shoe Shop</a>. All Rights
-            Reserved.
+            &copy; {currentYear} <a href="/">The Shoe Shop</a>. Bảo lưu mọi
+            quyền.
           </p>
           <div className="flex gap-4 text-blue-gray-300 sm:justify-center">
             <Typography

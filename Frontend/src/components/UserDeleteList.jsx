@@ -8,9 +8,9 @@ const UserDeleteList = () => {
   const handleDelete = async (userId) => {
     try {
       await axios.delete(`/api/users/remove-user/${userId}`);
-      SuccessToast("User deleted successfully.");
+      SuccessToast("Xóa người dùng thành công.");
     } catch (error) {
-      ErrorToast("Failed to delete user. Please try again later.");
+      ErrorToast("Xóa người dùng thất bại. Vui lòng thử lại sau.");
       console.error("Error deleting user:", error);
     }
   };

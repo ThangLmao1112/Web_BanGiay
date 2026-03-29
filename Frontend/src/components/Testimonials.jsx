@@ -6,31 +6,31 @@ const testimonials = [
     id: 1,
     name: "Ayesha Khan",
     message:
-      "Excellent service and high-quality products. Highly recommend to everyone!",
+      "Dịch vụ rất tốt, sản phẩm chất lượng cao. Mình rất khuyên mọi người nên trải nghiệm!",
   },
   {
     id: 2,
     name: "Omar Ahmed",
     message:
-      "A fantastic shopping experience with timely delivery and great customer support.",
+      "Trải nghiệm mua sắm tuyệt vời, giao hàng đúng hẹn và hỗ trợ khách hàng rất chu đáo.",
   },
   {
     id: 3,
     name: "Fatima Ali",
     message:
-      "The quality of the clothing is top-notch, and the styles are always in vogue.",
+      "Chất lượng sản phẩm rất tốt, mẫu mã luôn hợp xu hướng và dễ phối đồ.",
   },
   {
     id: 4,
     name: "Ahmed Raza",
     message:
-      "A reliable store with a wide range of fashionable items and exceptional service.",
+      "Một cửa hàng đáng tin cậy với nhiều mặt hàng thời trang và dịch vụ vượt mong đợi.",
   },
   {
     id: 5,
     name: "Sara Khan",
     message:
-      "Always pleased with my purchases. The products exceed expectations every time.",
+      "Lần nào mua cũng hài lòng. Sản phẩm luôn vượt kỳ vọng của mình.",
   },
 ];
 
@@ -38,7 +38,7 @@ const CustomerTestimonials = () => {
   return (
     <div className="p-4 lg:p-8">
       <h1 className="text-2xl lg:text-4xl font-bold mb-6 text-center">
-        Customer Voices: Experiences You Can Trust
+        Khách hàng nói gì về chúng tôi
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 h-auto lg:h-[22rem]">
         {testimonials.map((testimonial, index) => (

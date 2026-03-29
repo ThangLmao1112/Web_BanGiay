@@ -36,7 +36,7 @@ const DetailedProduct = () => {
 
   useEffect(() => {
     if (!productId) {
-      ErrorToast("Product ID is missing");
+      ErrorToast("Thiếu ID sản phẩm");
       return;
     }
 
@@ -68,7 +68,7 @@ const DetailedProduct = () => {
           setColorImages(fetchedImages);
         }
       } catch (error) {
-        ErrorToast("Something went wrong while fetching the product");
+        ErrorToast("Đã có lỗi khi tải thông tin sản phẩm");
       } finally {
         setLoading(false);
       }
@@ -79,12 +79,12 @@ const DetailedProduct = () => {
 
   const handleAddToCart = async () => {
     if (!userId || !productId) {
-      alert("User or Product ID is missing");
+      alert("Thiếu ID người dùng hoặc ID sản phẩm");
       return;
     }
 
     if (!selectedSize || !selectedColor) {
-      ErrorToast("Please select both size and color before adding to cart.");
+      ErrorToast("Vui lòng chọn đầy đủ kích cỡ và màu trước khi thêm vào giỏ.");
       return;
     }
 
@@ -104,10 +104,10 @@ const DetailedProduct = () => {
           },
         }
       );
-      SuccessToast("Item added to cart");
+      SuccessToast("Đã thêm sản phẩm vào giỏ hàng");
     } catch (error) {
       console.error("Error adding item to cart", error);
-      ErrorToast("Error adding item to cart");
+      ErrorToast("Không thể thêm sản phẩm vào giỏ hàng");
     }
   };
 
@@ -118,19 +118,19 @@ const DetailedProduct = () => {
         status = {
           textColor: "text-red-500",
           circleColor: "bg-red-500",
-          text: "Limited stock available",
+          text: "Số lượng tồn kho có hạn",
         };
       } else if (product.stock >= 15 && product.stock < 30) {
         status = {
           textColor: "text-yellow-500",
           circleColor: "bg-yellow-500",
-          text: "Stock running low",
+          text: "Tồn kho sắp hết",
         };
       } else {
         status = {
           textColor: "text-green-500",
           circleColor: "bg-green-500",
-          text: "In stock",
+          text: "Còn hàng",
         };
       }
       setInventoryStatus(status);
@@ -152,7 +152,7 @@ const DetailedProduct = () => {
       }
     } catch (error) {
       ErrorToast(
-        "Something went wrong while fetching the images for the selected color"
+        "Đã có lỗi khi tải ảnh theo màu đã chọn"
       );
     }
   };
@@ -166,7 +166,7 @@ const DetailedProduct = () => {
   if (!product) {
     return (
       <div className="flex justify-center items-center h-screen">
-        No product details available.
+        Không có thông tin chi tiết sản phẩm.
       </div>
     );
   }
@@ -220,11 +220,11 @@ const DetailedProduct = () => {
             </div>
           </div>
           <p className="text-md font-semibold text-gray-700 mb-2">
-            Price:
+            Giá:
             <span className="font-normal"> Rs {product.price}</span>
           </p>
           <p className="text-md text-gray-600 mb-2 font-semibold">
-            Stock: <span className="font-normal">{product.stock}</span>
+            Tồn kho: <span className="font-normal">{product.stock}</span>
           </p>
           {/* Inventory status */}
           <div className="flex items-center">
@@ -237,13 +237,13 @@ const DetailedProduct = () => {
           </div>
 
           <p className="text-md text-gray-600 mb-4 font-semibold">
-            Description:{" "}
+            Mô tả:{" "}
             <span className="font-normal">{product.description}</span>
           </p>
 
           <div className="mt-4">
             <h2 className="text-md text-gray-600 font-semibold mb-2">
-              Available Colors
+              Màu hiện có
             </h2>
             <div className="flex flex-wrap gap-4">
               {colorsWithImages.map(({ color, imageUrl }) => (
@@ -276,7 +276,7 @@ const DetailedProduct = () => {
 
           <div className="mt-4">
             <h2 className="font-semibold mb-2 text-md text-gray-600">
-              Available Sizes
+              Kích cỡ hiện có
             </h2>
             <div className="flex gap-2">
               {sizes.map((size, index) => (
@@ -300,13 +300,13 @@ const DetailedProduct = () => {
 
           <div className="quantity-selector flex items-center gap-6 py-4">
             <span className="font-semibold text-md text-gray-600">
-              Quantity:
+              Số lượng:
             </span>
             <div className="relative w-16 sm:w-20 lg:w-24">
               <Input
                 type="number"
                 variant="standard"
-                label="Select Quantity"
+                label="Chọn số lượng"
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
                 min="1"
@@ -321,22 +321,22 @@ const DetailedProduct = () => {
             size="lg"
             className="bg-black hover:bg-gray-700 text-white py-2 px-4 rounded-lg transition duration-200 mt-4"
           >
-            Add to Cart
+            Thêm vào giỏ hàng
           </Button>
         </div>
       </div>
       <div className="mt-5 mb-5">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          Your Rating Matters
+          Đánh giá của bạn rất quan trọng
         </h2>
         <p className="text-gray-600 text-sm">
-          We value your feedback! Help us improve by rating the product.
+          Chúng tôi luôn trân trọng phản hồi của bạn. Hãy đánh giá để giúp chúng tôi cải thiện.
         </p>
 
         <ReviewsOnProduct />
       </div>
       <div className="manageProducts">
-        <p className="text-2xl font-semibold">You May Also Like</p>
+        <p className="text-2xl font-semibold">Có thể bạn cũng thích</p>
         <ManageProducts
           renderSmallCard={false}
           allProductProp={true}

@@ -17,6 +17,19 @@ import {
 } from "@material-tailwind/react";
 import { useSearchParams } from "react-router-dom";
 
+const CATEGORY_LABELS = {
+  "Gents Footwear": "Giày nam",
+  "Ladies Footwear": "Giày nữ",
+};
+
+const SUBCATEGORY_LABELS = {
+  Sandals: "Sandal",
+  Slippers: "Dép",
+  Shoes: "Giày",
+  Sneakers: "Sneaker",
+  Pumps: "Giày cao gót",
+};
+
 const ManageProducts = ({
   renderSmallCard = false,
   allProductProp,
@@ -79,7 +92,7 @@ const ManageProducts = ({
         console.error("Unexpected API response format");
       }
     } catch (error) {
-      ErrorToast("Error fetching products: " + error.message);
+      ErrorToast("Lỗi khi tải sản phẩm: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -133,9 +146,9 @@ const ManageProducts = ({
         filteredProducts.filter((product) => product._id !== productId)
       );
       setProducts(products.filter((product) => product._id !== productId));
-      SuccessToast("Product deleted successfully");
+      SuccessToast("Xóa sản phẩm thành công");
     } catch (error) {
-      ErrorToast("Failed to delete product: " + error.message);
+      ErrorToast("Xóa sản phẩm thất bại: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -207,7 +220,7 @@ const ManageProducts = ({
               onClick={() => handleCategoryChange("All")}
               className={selectedCategory === "All" ? "bg-gray-300" : ""}
             >
-              All Categories
+              Tất cả danh mục
             </Button>
             {categories
               .filter((category) => category !== "All")
@@ -218,7 +231,7 @@ const ManageProducts = ({
                   onClick={() => handleCategoryChange(category)}
                   className={selectedCategory === category ? "bg-gray-300" : ""}
                 >
-                  {category}
+                  {CATEGORY_LABELS[category] || category}
                 </Button>
               ))}
           </div>
@@ -226,14 +239,14 @@ const ManageProducts = ({
             <div className="my-4">
               <Select
                 variant="outlined"
-                label="Select Subcategory"
+                label="Chọn danh mục con"
                 value={selectedSubcategory}
                 onChange={(value) => setSelectedSubcategory(value)}
               >
-                <Option value="">All Subcategories</Option>
+                <Option value="">Tất cả danh mục con</Option>
                 {subcategories.map((subcategory) => (
                   <Option key={subcategory} value={subcategory}>
-                    {subcategory}
+                    {SUBCATEGORY_LABELS[subcategory] || subcategory}
                   </Option>
                 ))}
               </Select>
@@ -261,7 +274,7 @@ const ManageProducts = ({
               />
             ))
           ) : (
-            <p className="text-gray-700 text-base">No products available</p>
+            <p className="text-gray-700 text-base">Không có sản phẩm nào</p>
           )}
         </div>
       )}
@@ -272,17 +285,17 @@ const ManageProducts = ({
           className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
           disabled={currentPage === 1}
         >
-          Previous
+          Trước
         </Button>
         <p className="mx-4 text-sm">
-          Page {currentPage} of {totalPages}
+          Trang {currentPage} / {totalPages}
         </p>
         <Button
           onClick={handleNextPage}
           className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
           disabled={currentPage === totalPages}
         >
-          Next
+          Tiếp
         </Button>
       </div>
     </div>

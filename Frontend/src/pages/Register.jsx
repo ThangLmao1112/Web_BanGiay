@@ -5,7 +5,6 @@ import {
   Select,
   Option,
   Textarea,
-  Spinner,
 } from "@material-tailwind/react";
 import SuccessToast from "../components/SuccessToast";
 import ErrorToast from "../components/ErrorToast";
@@ -42,7 +41,7 @@ const Register = () => {
     setLoading(true);
     try {
       await axios.post("/api/users/register", formData);
-      SuccessToast("Registration Successful");
+      SuccessToast("Đăng ký thành công");
       setFormData({
         firstName: "",
         lastName: "",
@@ -57,7 +56,7 @@ const Register = () => {
       }, 1500);
     } catch (error) {
       console.error(error);
-      ErrorToast("Error registering user. Please try again.");
+      ErrorToast("Đăng ký thất bại. Vui lòng thử lại.");
     } finally {
       setLoading(false);
     }
@@ -68,13 +67,13 @@ const Register = () => {
       <ToastContainer />
       {loading && <LoadingOverlay />}
       <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">
-        Register
+        Đăng ký tài khoản
       </h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <fieldset className="p-4 border rounded-md shadow-sm">
             <legend className="text-lg font-semibold text-gray-700 px-2">
-              Personal Information
+              Thông tin cá nhân
             </legend>
             <div className="mt-4">
               <Input
@@ -84,10 +83,10 @@ const Register = () => {
                 value={formData.firstName}
                 onChange={handleChange}
                 variant="outlined"
-                label="First Name"
+                label="Tên"
                 size="lg"
                 color="blue"
-                placeholder="Enter your first name"
+                placeholder="Nhập tên của bạn"
                 required
               />
             </div>
@@ -99,10 +98,10 @@ const Register = () => {
                 value={formData.lastName}
                 onChange={handleChange}
                 variant="outlined"
-                label="Last Name"
+                label="Họ"
                 size="lg"
                 color="blue"
-                placeholder="Enter your last name"
+                placeholder="Nhập họ của bạn"
                 required
               />
             </div>
@@ -117,13 +116,13 @@ const Register = () => {
                 label="Email"
                 size="lg"
                 color="blue"
-                placeholder="Enter your email"
+                placeholder="Nhập email của bạn"
                 required
               />
             </div>
             <div className="mt-4">
               <Select
-                label="Select Gender"
+                label="Chọn giới tính"
                 id="gender"
                 name="gender"
                 size="lg"
@@ -132,9 +131,9 @@ const Register = () => {
                 onChange={(e) => setFormData({ ...formData, gender: e })}
                 required
               >
-                <Option value="Male">Male</Option>
-                <Option value="Female">Female</Option>
-                <Option value="Other">Other</Option>
+                <Option value="Male">Nam</Option>
+                <Option value="Female">Nữ</Option>
+                <Option value="Other">Khác</Option>
               </Select>
             </div>
             <div className="mt-4">
@@ -145,10 +144,10 @@ const Register = () => {
                 value={formData.phone}
                 onChange={handleChange}
                 variant="outlined"
-                label="Phone"
+                label="Số điện thoại"
                 size="lg"
                 color="blue"
-                placeholder="Enter your phone number"
+                placeholder="Nhập số điện thoại"
                 required
               />
             </div>
@@ -160,24 +159,24 @@ const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
                 variant="outlined"
-                label="Password"
+                label="Mật khẩu"
                 size="lg"
                 color="blue"
-                placeholder="Enter your password"
+                placeholder="Nhập mật khẩu"
                 required
               />
             </div>
           </fieldset>
           <fieldset className="p-4 border rounded-md shadow-sm">
             <legend className="text-lg font-semibold text-gray-700 px-2">
-              Address Information
+              Thông tin địa chỉ
             </legend>
             <div className="mt-4">
               <Textarea
                 name="addressLine1"
                 rows="4"
                 value={formData.address[0].addressLine1}
-                label="Address Line"
+                label="Địa chỉ"
                 color="blue"
                 onChange={(e) => handleAddressChange(0, e)}
                 className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
@@ -190,10 +189,10 @@ const Register = () => {
                 value={formData.address[0].city}
                 onChange={(e) => handleAddressChange(0, e)}
                 variant="outlined"
-                label="City"
+                label="Thành phố"
                 size="lg"
                 color="blue"
-                placeholder="Enter your city"
+                placeholder="Nhập thành phố"
               />
             </div>
             <div className="mt-4">
@@ -203,10 +202,10 @@ const Register = () => {
                 value={formData.address[0].province}
                 onChange={(e) => handleAddressChange(0, e)}
                 variant="outlined"
-                label="Province"
+                label="Tỉnh/Thành"
                 size="lg"
                 color="blue"
-                placeholder="Enter your state or province"
+                placeholder="Nhập tỉnh/thành"
               />
             </div>
             <div className="mt-4">
@@ -216,10 +215,10 @@ const Register = () => {
                 value={formData.address[0].postalCode}
                 onChange={(e) => handleAddressChange(0, e)}
                 variant="outlined"
-                label="Postal Code"
+                label="Mã bưu chính"
                 size="lg"
                 color="blue"
-                placeholder="Enter your postal code"
+                placeholder="Nhập mã bưu chính"
               />
             </div>
           </fieldset>
@@ -228,7 +227,7 @@ const Register = () => {
           type="submit"
           className="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-transform transform hover:scale-105"
         >
-          Register
+          Đăng ký
         </button>
       </form>
     </div>

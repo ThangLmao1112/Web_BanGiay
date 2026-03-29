@@ -33,8 +33,8 @@ const UserList = ({ onDelete, showFullDetails = true }) => {
       setUsers(allUsers);
       setTotalUsers(totalUsers);
     } catch (err) {
-      setError("Failed to fetch users. Please try again later.");
-      ErrorToast("Failed to fetch users. Please try again later.");
+      setError("Không thể tải danh sách người dùng. Vui lòng thử lại sau.");
+      ErrorToast("Không thể tải danh sách người dùng. Vui lòng thử lại sau.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -74,7 +74,7 @@ const UserList = ({ onDelete, showFullDetails = true }) => {
     <div className="max-w-[80%] mx-auto p-4">
       {showFullDetails && (
         <h1 className="text-2xl md:text-3xl font-bold mb-4 text-center">
-          User List
+          Danh sách người dùng
         </h1>
       )}
 
@@ -106,8 +106,8 @@ const UserList = ({ onDelete, showFullDetails = true }) => {
               <Input
                 variant="standard"
                 type="text"
-                label="Type to search"
-                placeholder="Search by product name"
+                label="Nhập để tìm"
+                placeholder="Tìm theo email"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className={`pl-4 pr-4 py-2 w-full shadow-sm transition duration-300 transform ${
@@ -126,36 +126,36 @@ const UserList = ({ onDelete, showFullDetails = true }) => {
                   {showFullDetails ? (
                     <>
                       <th className="py-2 md:py-3 px-2 md:px-4 text-left text-sm md:text-base">
-                        Full Name
+                        Họ và tên
                       </th>
                       <th className="py-2 md:py-3 px-2 md:px-4 text-left text-sm md:text-base">
                         Email
                       </th>
                       <th className="py-2 md:py-3 px-2 md:px-4 text-left text-sm md:text-base">
-                        Gender
+                        Giới tính
                       </th>
                       <th className="py-2 md:py-3 px-2 md:px-4 text-left text-sm md:text-base">
-                        Contact Info
+                        Thông tin liên hệ
                       </th>
                       <th className="py-2 md:py-3 px-2 md:px-4 text-left text-sm md:text-base">
-                        Registered Date
+                        Ngày đăng ký
                       </th>
                       {onDelete && (
                         <th className="py-2 md:py-3 px-2 md:px-4 text-left text-sm md:text-base">
-                          Actions
+                          Thao tác
                         </th>
                       )}
                     </>
                   ) : (
                     <>
                       <th className="py-2 md:py-3 px-2 md:px-4 text-left text-sm md:text-base">
-                        Full Name
+                        Họ và tên
                       </th>
                       <th className="py-2 md:py-3 px-2 md:px-4 text-left text-sm md:text-base">
                         Email
                       </th>
                       <th className="py-2 md:py-3 px-2 md:px-4 text-left text-sm md:text-base">
-                        Activity Score
+                        Điểm hoạt động
                       </th>
                     </>
                   )}
@@ -174,7 +174,7 @@ const UserList = ({ onDelete, showFullDetails = true }) => {
                           {user.gender}
                         </td>
                         <td className="py-2 md:py-3 px-2 md:px-4 text-sm md:text-base">
-                          {user.contactInfo || "N/A"}
+                          {user.contactInfo || "Không có"}
                         </td>
                         <td className="py-2 md:py-3 px-2 md:px-4 text-sm md:text-base">
                           {new Date(user.registeredDate).toLocaleDateString()}
@@ -185,7 +185,7 @@ const UserList = ({ onDelete, showFullDetails = true }) => {
                               onClick={() => onDelete(user._id)}
                               className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
                             >
-                              Delete
+                              Xóa
                             </button>
                           </td>
                         )}
@@ -215,17 +215,17 @@ const UserList = ({ onDelete, showFullDetails = true }) => {
               onClick={() => handlePageChange(page - 1)}
               disabled={page === 1}
             >
-              Previous
+              Trước
             </Button>
             <span className="text-gray-700 text-sm ">
-              Page {page} of {totalPages}
+              Trang {page} / {totalPages}
             </span>
             <Button
               className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded w-full md:w-auto"
               onClick={() => handlePageChange(page + 1)}
               disabled={page === totalPages}
             >
-              Next
+              Tiếp
             </Button>
           </div>
         </>

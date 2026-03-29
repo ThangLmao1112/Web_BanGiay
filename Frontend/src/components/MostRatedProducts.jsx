@@ -13,6 +13,11 @@ import {
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { TiArrowLeftThick, TiArrowRightThick } from "react-icons/ti";
 
+const CATEGORY_LABELS = {
+  "Gents Footwear": "Giày nam",
+  "Ladies Footwear": "Giày nữ",
+};
+
 const MostRatedProducts = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -108,7 +113,7 @@ const MostRatedProducts = () => {
               onClick={() => handleCategoryChange(category)}
               className={`text-gray-800 ${selectedCategory === category ? "bg-gray-300" : "bg-gray-600 text-white"}`}
             >
-              {category}
+              {CATEGORY_LABELS[category] || category}
             </Button>
           ))}
         </div>
@@ -156,7 +161,7 @@ const MostRatedProducts = () => {
                       color="gray"
                       className="font-normal opacity-75 text-xs sm:text-sm md:text-base"
                     >
-                      Rating: {formatRating(product.averageRating)}
+                      Đánh giá: {formatRating(product.averageRating)}
                     </Typography>
                   </div>
                 </CardBody>
@@ -168,7 +173,7 @@ const MostRatedProducts = () => {
                     fullWidth={true}
                     className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
                   >
-                    View Product
+                    Xem sản phẩm
                   </Button>
                 </CardFooter>
               </Card>

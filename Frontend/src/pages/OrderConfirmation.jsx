@@ -25,17 +25,17 @@ const OrderConfirmation = () => {
       <Card className="border border-black p-5">
         <CardBody>
           <p className="text-2xl text-center mb-6 font-semibold">
-            Thank you for your order!
+            Cảm ơn bạn đã đặt hàng!
           </p>
 
           <p variant="body1" className="text-center mb-6">
-            Your order has been successfully placed and is now being processed.
-            You will receive a confirmation email soon.
+            Đơn hàng của bạn đã được ghi nhận thành công và đang được xử lý.
+            Bạn sẽ sớm nhận được email xác nhận.
           </p>
 
           {/* Order Summary */}
           <p variant="h5" className="mb-4 font-semibold">
-            Order Summary:
+            Tóm tắt đơn hàng:
           </p>
           <div className="mb-2">
             {cartItems?.map((item, index) => (
@@ -48,7 +48,7 @@ const OrderConfirmation = () => {
               </div>
             ))}
             <div className="flex justify-start gap-8 font-semibold text-lg mt-4">
-              <span>Total:</span>
+              <span>Tổng tiền:</span>
               <span>Rs {totalAmount}</span>
             </div>
           </div>
@@ -56,14 +56,14 @@ const OrderConfirmation = () => {
 
           {/* Shipping and Payment Details */}
           <p variant="h5" className="mb-2 font-semibold mt-2">
-            Shipping and Payment:
+            Giao hàng và thanh toán:
           </p>
           <List>
             <ListItem className="flex gap-8">
-              <strong>Shipping Address:</strong> {shippingAddress}
+              <strong>Địa chỉ giao hàng:</strong> {shippingAddress}
             </ListItem>
             <ListItem className="flex gap-8">
-              <strong>Payment Method:</strong> {paymentMethod}
+              <strong>Phương thức thanh toán:</strong> {paymentMethod}
             </ListItem>
           </List>
 
@@ -72,7 +72,7 @@ const OrderConfirmation = () => {
               onClick={handleBackToShop}
               className="bg-gray-800 text-white px-6 py-3 rounded hover:bg-gray-900 transition duration-300"
             >
-              Continue Shopping
+              Tiếp tục mua sắm
             </Button>
           </div>
         </CardBody>

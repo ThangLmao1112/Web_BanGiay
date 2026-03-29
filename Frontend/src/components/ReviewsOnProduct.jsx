@@ -121,13 +121,13 @@ const ReviewsOnProduct = () => {
       );
 
       if (response.status === 201) {
-        SuccessToast("Rating submitted successfully!");
+        SuccessToast("Gửi đánh giá thành công!");
         setUserRating(selectedStar);
         fetchCommentsAndRatings(currentPage);
       }
     } catch (error) {
       console.error("Error submitting rating:", error);
-      ErrorToast("Failed to submit rating.");
+      ErrorToast("Gửi đánh giá thất bại.");
     }
   };
 
@@ -152,7 +152,7 @@ const ReviewsOnProduct = () => {
         (ratingDistribution[star - 1] / totalRating) * 100 || 0;
       return (
         <div key={star} className="flex items-center mb-3 space-x-3">
-          <span className="w-12 text-right text-gray-600">{star} star</span>
+          <span className="w-12 text-right text-gray-600">{star} sao</span>
           <div className="flex-1 bg-gray-200 h-3 rounded-lg relative">
             <div
               className="bg-yellow-500 h-3 rounded-lg absolute top-0 left-0"
@@ -172,7 +172,7 @@ const ReviewsOnProduct = () => {
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (!comment) {
-      alert("Please write a comment before submitting.");
+      alert("Vui lòng nhập bình luận trước khi gửi.");
       return;
     }
     const token = localStorage.getItem("token");
@@ -188,20 +188,20 @@ const ReviewsOnProduct = () => {
       );
 
       if (response.status === 201) {
-        SuccessToast("Comment added successfully!");
+        SuccessToast("Thêm bình luận thành công!");
         setComment("");
         fetchCommentsAndRatings(currentPage);
       }
     } catch (error) {
       console.error("Error submitting comment:", error);
-      ErrorToast("Failed to submit comment.");
+      ErrorToast("Gửi bình luận thất bại.");
     }
   };
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     if (!editCommentText) {
-      alert("Please write something to update the comment.");
+      alert("Vui lòng nhập nội dung để cập nhật bình luận.");
       return;
     }
     const token = localStorage.getItem("token");
@@ -216,14 +216,14 @@ const ReviewsOnProduct = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (response.status === 200) {
-        SuccessToast("Comment updated successfully!");
+        SuccessToast("Cập nhật bình luận thành công!");
         setEditCommentId(null);
         setEditCommentText("");
         fetchCommentsAndRatings(currentPage);
       }
     } catch (error) {
       console.error("Error updating comment:", error);
-      ErrorToast("Failed to update comment.");
+      ErrorToast("Cập nhật bình luận thất bại.");
     }
   };
 
@@ -245,12 +245,12 @@ const ReviewsOnProduct = () => {
       });
 
       if (response.status === 200) {
-        SuccessToast("Comment deleted successfully!");
+        SuccessToast("Xóa bình luận thành công!");
         fetchCommentsAndRatings(currentPage);
       }
     } catch (error) {
       console.error("Error deleting comment:", error);
-      ErrorToast("Failed to delete comment.");
+      ErrorToast("Xóa bình luận thất bại.");
     }
   };
 
@@ -263,7 +263,7 @@ const ReviewsOnProduct = () => {
   };
 
   const handleReportComment = () => {
-    alert("This comment has been reported.");
+    alert("Bình luận đã được báo cáo.");
     setShowMenuForComment(null);
   };
 
@@ -288,20 +288,20 @@ const ReviewsOnProduct = () => {
           <h2 className="text-3xl font-semibold mb-1 text-gray-800">
             {averageRating.toFixed(1)}
           </h2>
-          <p className="text-gray-700 mb-2">Total Ratings: {totalRating}</p>
+          <p className="text-gray-700 mb-2">Tổng lượt đánh giá: {totalRating}</p>
 
           <div className="mb-4 flex items-center space-x-3">
             {renderStars()}
           </div>
           <Button color="yellow" onClick={handleRatingSubmit}>
-            Submit Rating
+            Gửi đánh giá
           </Button>
         </div>
 
         {totalRating > 0 && (
           <div className="flex-1">
             <p className="text-xl font-bold mb-3 text-gray-800">
-              Rating Distribution
+              Phân bố đánh giá
             </p>
             {renderProgressBars()}
           </div>
@@ -309,28 +309,28 @@ const ReviewsOnProduct = () => {
       </div>
 
       <div className="comment-section border-t border-gray-300 pt-4">
-        <h2 className="text-lg font-semibold mb-2">Leave a Comment</h2>
+        <h2 className="text-lg font-semibold mb-2">Để lại bình luận</h2>
         <form onSubmit={handleCommentSubmit}>
           <textarea
             value={comment}
             onChange={handleCommentChange}
             rows="4"
             className="w-full border border-gray-300 rounded-lg p-2 mb-4 resize-none"
-            placeholder="Write your comment here..."
+            placeholder="Viết bình luận của bạn tại đây..."
           />
           <Button
             type="submit"
             className="bg-black hover:bg-gray-700 text-white py-2 px-4 rounded-lg transition duration-200"
           >
-            Submit
+            Gửi
           </Button>
         </form>
       </div>
 
       <div className="comments-list border-t border-gray-300 pt-4 mt-4">
-        <h2 className="text-lg font-semibold mb-2">Comments</h2>
+        <h2 className="text-lg font-semibold mb-2">Bình luận</h2>
         {comments.length === 0 ? (
-          <p className="text-gray-600">No comments yet.</p>
+          <p className="text-gray-600">Chưa có bình luận nào.</p>
         ) : (
           comments.map((comment) => (
             <div
@@ -345,21 +345,21 @@ const ReviewsOnProduct = () => {
                       onChange={handleEditCommentChange}
                       rows="3"
                       className="w-full border border-gray-300 rounded-lg p-2 mb-2"
-                      placeholder="Update your comment here..."
+                      placeholder="Cập nhật bình luận của bạn tại đây..."
                     />
                     <div className="flex gap-2">
                       <Button
                         type="submit"
                         className="bg-gray-500 hover:bg-gray-400 text-white py-2 px-4 rounded-lg"
                       >
-                        Save
+                        Lưu
                       </Button>
                       <Button
                         type="Button"
                         onClick={handleCancelEdit}
                         className="bg-gray-300 hover:bg-gray-400 text-black py-2 px-4 rounded-lg"
                       >
-                        Cancel
+                        Hủy
                       </Button>
                     </div>
                   </form>
@@ -396,14 +396,14 @@ const ReviewsOnProduct = () => {
                           }
                         >
                           <FaEdit className="text-blue-600" />
-                          <span>Edit</span>
+                          <span>Sửa</span>
                         </li>
                         <li
                           className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded-md"
                           onClick={() => handleDeleteComment(comment._id)}
                         >
                           <FaTrashAlt className="text-red-600" />
-                          <span>Delete</span>
+                          <span>Xóa</span>
                         </li>
                       </ul>
                     ) : (
@@ -413,7 +413,7 @@ const ReviewsOnProduct = () => {
                           onClick={handleReportComment}
                         >
                           <FaFlag className="text-yellow-600" />
-                          <span>Report</span>
+                          <span>Báo cáo</span>
                         </li>
                       </ul>
                     )}
@@ -429,14 +429,14 @@ const ReviewsOnProduct = () => {
             className="bg-gray-300 hover:bg-gray-400 text-black py-2 px-4 rounded-lg mr-2"
             disabled={currentPage === 1}
           >
-            Previous
+            Trước
           </Button>
           <Button
             onClick={handleNextPage}
             className="bg-gray-300 hover:bg-gray-400 text-black py-2 px-4 rounded-lg"
             disabled={currentPage === totalPages}
           >
-            Next
+            Tiếp
           </Button>
         </div>
       </div>
