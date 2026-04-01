@@ -20,17 +20,6 @@ import Layout from "./components/Layout";
 import ContactUs from "./components/ContactUs";
 import AboutUs from "./pages/AboutUs";
 import Cart from "./pages/Cart";
-import GentsShoes from "./pages/GentsShoes";
-import GentsSandals from "./pages/GentsSandals";
-import GentsSlippers from "./pages/GentsSlippers";
-import GentsSneakers from "./pages/GentsSneakers";
-import LadiesSandals from "./pages/LadiesSandals";
-import LadiesPumps from "./pages/LadiesPumps";
-import LadiesSneakers from "./pages/LadiesSneakers";
-import LadiesShoes from "./pages/LadiesShoes";
-import LadiesSlippers from "./pages/LadiesSlippers";
-import GentsNewArrivals from "./pages/GentsNewArrivals";
-import LadiesNewArrival from "./pages/LadiesNewArrival";
 import GentsFootwear from "./pages/GentsFootwear";
 import LadiesFootwear from "./pages/LadiesFootwear";
 import FindUs from "./components/FindUs";
@@ -47,17 +36,6 @@ function App() {
         <Route path="/contactUs" element={<ContactUs />} />
         <Route path="/aboutUs" element={<AboutUs />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/gentsShoes" element={<GentsShoes />} />
-        <Route path="/gentsSandals" element={<GentsSandals />} />
-        <Route path="/gentsSlippers" element={<GentsSlippers />} />
-        <Route path="/gentsSneakers" element={<GentsSneakers />} />
-        <Route path="/ladiesSandals" element={<LadiesSandals />} />
-        <Route path="/ladiesPumps" element={<LadiesPumps />} />
-        <Route path="/ladiesSneakers" element={<LadiesSneakers />} />
-        <Route path="/ladiesShoes" element={<LadiesShoes />} />
-        <Route path="/ladiesSlippers" element={<LadiesSlippers />} />
-        <Route path="/gentsNewArrivals" element={<GentsNewArrivals />} />
-        <Route path="/ladiesNewArrivals" element={<LadiesNewArrival />} />
         <Route path="/gentsFootwear" element={<GentsFootwear />} />
         <Route path="/ladiesFootwear" element={<LadiesFootwear />} />
         <Route path="/findUs" element={<FindUs />} />

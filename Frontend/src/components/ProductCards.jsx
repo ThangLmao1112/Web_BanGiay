@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Carousel, IconButton, Button } from "@material-tailwind/react";
 import { FaEdit } from "react-icons/fa";
 
+const FALLBACK_IMAGE = "https://placehold.co/600x600?text=No+Image";
+
 const ProductCards = ({
   product,
   onDelete,
@@ -16,20 +18,31 @@ const ProductCards = ({
     return null;
   }
 
-  const colorsString = product.colors[0];
+  const normalizeColors = (colors) => {
+    if (!Array.isArray(colors) || colors.length === 0) return [];
+
+    if (typeof colors[0] === "string") {
+      try {
+        const parsed = JSON.parse(colors[0]);
+        if (Array.isArray(parsed)) return parsed;
+      } catch {
+        // Colors are already a normal string array.
+      }
+      return colors;
+    }
+
+    return colors;
+  };
+
+  const sanitizeImageUrls = (images) =>
+    (images || []).filter((img) => typeof img === "string" && img.trim() !== "");
+
   const [selectedColor, setSelectedColor] = useState("");
   const [displayedImages, setDisplayedImages] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [fadeIn, setFadeIn] = useState(true);
 
-  let colorsArray = [];
-  if (colorsString && typeof colorsString === "string") {
-    try {
-      colorsArray = JSON.parse(colorsString);
-    } catch (error) {
-      console.error("Error parsing colors string:", error);
-    }
-  }
+  const colorsArray = normalizeColors(product.colors);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -47,12 +60,12 @@ const ProductCards = ({
           setDisplayedImages(response.data.map((img) => img.imageUrl));
           setCurrentImageIndex(0);
         } else {
-          setDisplayedImages(["/default-image.jpg"]);
+          setDisplayedImages([FALLBACK_IMAGE]);
           setCurrentImageIndex(0);
         }
       } catch (error) {
         console.error("Error fetching image by color:", error);
-        setDisplayedImages(["/default-image.jpg"]);
+        setDisplayedImages([FALLBACK_IMAGE]);
         setCurrentImageIndex(0);
       } finally {
         setFadeIn(true);
@@ -74,8 +87,12 @@ const ProductCards = ({
   };
 
   useEffect(() => {
-    if (product.images.length > 0) {
-      setDisplayedImages(product.images);
+    const validImages = sanitizeImageUrls(product.images);
+    if (validImages.length > 0) {
+      setDisplayedImages(validImages);
+      setCurrentImageIndex(0);
+    } else {
+      setDisplayedImages([FALLBACK_IMAGE]);
       setCurrentImageIndex(0);
     }
   }, [product.images]);
@@ -167,7 +184,7 @@ const ProductCards = ({
                 ) : (
                   <div className="relative">
                     <img
-                      src="/default-image.jpg"
+                      src={FALLBACK_IMAGE}
                       alt="Default Image"
                       className="h-48 w-full object-cover"
                     />
@@ -191,7 +208,7 @@ const ProductCards = ({
               >
                 <img
                   src={
-                    displayedImages[currentImageIndex] || "/default-image.jpg"
+                    displayedImages[currentImageIndex] || FALLBACK_IMAGE
                   }
                   alt="Selected Product Image"
                   className="h-48 w-full object-cover cursor-pointer"

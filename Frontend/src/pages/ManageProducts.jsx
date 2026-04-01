@@ -12,8 +12,6 @@ import ProductUpdateImage from "./ProductUpdateImage";
 import { ProductContext } from "../context/ProductContext";
 import {
   Button,
-  Select,
-  Option,
 } from "@material-tailwind/react";
 import { useSearchParams } from "react-router-dom";
 
@@ -22,27 +20,16 @@ const CATEGORY_LABELS = {
   "Ladies Footwear": "Giày nữ",
 };
 
-const SUBCATEGORY_LABELS = {
-  Sandals: "Sandal",
-  Slippers: "Dép",
-  Shoes: "Giày",
-  Sneakers: "Sneaker",
-  Pumps: "Giày cao gót",
-};
-
 const ManageProducts = ({
   renderSmallCard = false,
   allProductProp,
   detailedProductCard = true,
   defaultCategory = "All",
-  defaultSubcategory = "",
 }) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [subcategories, setSubcategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(defaultCategory); 
-  const [selectedSubcategory, setSelectedSubcategory] = useState(defaultSubcategory);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -63,7 +50,7 @@ const ManageProducts = ({
 
   useEffect(() => {
     filterProducts();
-  }, [searchQuery, selectedCategory, selectedSubcategory, products]);
+  }, [searchQuery, selectedCategory, products]);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -80,14 +67,6 @@ const ManageProducts = ({
         const categoriesSet = new Set(productDetails.map((p) => p.category));
         setCategories(["All", ...categoriesSet]);
 
-        if (selectedCategory !== "All") {
-          const subcategoriesSet = new Set(
-            productDetails
-              .filter((p) => p.category === selectedCategory)
-              .map((p) => p.subcategory)
-          );
-          setSubcategories([...subcategoriesSet]);
-        }
       } else {
         console.error("Unexpected API response format");
       }
@@ -107,12 +86,6 @@ const ManageProducts = ({
       );
     }
 
-    if (selectedSubcategory) {
-      filtered = filtered.filter(
-        (product) => product.subcategory === selectedSubcategory
-      );
-    }
-
     if (searchQuery) {
       filtered = filtered.filter((product) =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -125,17 +98,6 @@ const ManageProducts = ({
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
-    setSelectedSubcategory("");
-    if (category === "All") {
-      setSubcategories([]);
-    } else {
-      const subcategoriesSet = new Set(
-        products
-          .filter((p) => p.category === category)
-          .map((p) => p.subcategory)
-      );
-      setSubcategories([...subcategoriesSet]);
-    }
   };
 
   const handleProductDelete = async (productId) => {
@@ -191,7 +153,12 @@ const ManageProducts = ({
     if (!productId) return;
 
     setProductId(productId);
-    navigate(`/detailedProduct/${productId}?color=${color}`);
+    if (color) {
+      navigate(`/detailedProduct/${productId}?color=${color}`);
+      return;
+    }
+
+    navigate(`/detailedProduct/${productId}`);
   };
 
 
@@ -235,23 +202,6 @@ const ManageProducts = ({
                 </Button>
               ))}
           </div>
-          {subcategories.length > 0 && (
-            <div className="my-4">
-              <Select
-                variant="outlined"
-                label="Chọn danh mục con"
-                value={selectedSubcategory}
-                onChange={(value) => setSelectedSubcategory(value)}
-              >
-                <Option value="">Tất cả danh mục con</Option>
-                {subcategories.map((subcategory) => (
-                  <Option key={subcategory} value={subcategory}>
-                    {SUBCATEGORY_LABELS[subcategory] || subcategory}
-                  </Option>
-                ))}
-              </Select>
-            </div>
-          )}
         </>
       )}
 

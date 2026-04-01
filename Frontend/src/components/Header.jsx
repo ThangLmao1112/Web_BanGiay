@@ -85,9 +85,21 @@ function NavListMenu({ label, menuItems }) {
 function NavList({ navItems }) {
   return (
     <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1">
-      {navItems.map((item) => (
-        <NavListMenu key={item.label} label={item.label} menuItems={item.menuItems} />
-      ))}
+      {navItems.map((item) => {
+        if (item.path) {
+          return (
+            <NavLink key={item.label} to={item.path}>
+              <ListItem className="py-2 pr-4 font-medium text-gray-900">
+                {item.label}
+              </ListItem>
+            </NavLink>
+          );
+        }
+
+        return (
+          <NavListMenu key={item.label} label={item.label} menuItems={item.menuItems} />
+        );
+      })}
     </List>
   );
 }
@@ -109,13 +121,6 @@ const Header = ({ onSearchClick, searchVisible }) => {
     freeDelivery: "Miễn phí giao hàng cho đơn từ Rs.3000 trở lên",
     gentsFootwear: "GIÀY NAM",
     ladiesFootwear: "GIÀY NỮ",
-    newArrivals: "HÀNG MỚI VỀ 24",
-    sale: "KHUYẾN MÃI",
-    shoes: "GIÀY",
-    sandals: "SANDAL",
-    slippers: "DÉP",
-    sneakers: "SNEAKER",
-    pumps: "GIÀY CAO GÓT",
     trackOrder: "Theo dõi đơn hàng",
     signIn: "Đăng nhập",
     signUp: "Đăng ký",
@@ -128,33 +133,11 @@ const Header = ({ onSearchClick, searchVisible }) => {
   const navItems = [
     {
       label: t.gentsFootwear,
-      menuItems: [
-        { title: t.shoes, path: "/gentsShoes" },
-        { title: t.sandals, path: "/gentsSandals" },
-        { title: t.slippers, path: "/gentsSlippers" },
-        { title: t.sneakers, path: "/gentsSneakers" },
-      ],
+      path: "/gentsFootwear",
     },
     {
       label: t.ladiesFootwear,
-      menuItems: [
-        { title: t.sandals, path: "/ladiesSandals" },
-        { title: t.pumps, path: "/ladiesPumps" },
-        { title: t.sneakers, path: "/ladiesSneakers" },
-        { title: t.shoes, path: "/ladiesShoes" },
-        { title: t.slippers, path: "/ladiesSlippers" },
-      ],
-    },
-    {
-      label: t.newArrivals,
-      menuItems: [
-        { title: t.gentsFootwear, path: "/gentsNewArrivals" },
-        { title: t.ladiesFootwear, path: "/ladiesNewArrivals" },
-      ],
-    },
-    {
-      label: t.sale,
-      menuItems: [{ title: t.gentsFootwear }, { title: t.ladiesFootwear }],
+      path: "/ladiesFootwear",
     },
   ];
 

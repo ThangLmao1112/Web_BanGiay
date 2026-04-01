@@ -1,5 +1,5 @@
 import { Typography } from "@material-tailwind/react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const SITEMAP = [
   {
@@ -20,9 +20,8 @@ const SITEMAP = [
   {
     title: "Danh mục",
     links: [
-      { label: "Khuyến mãi", path: "/sale" },
-      { label: "Hàng mới nam", path: "/gentsNewArrivals" },
-      { label: "Hàng mới nữ", path: "/ladiesNewArrivals" },
+      { label: "Giày nam", path: "/gentsFootwear" },
+      { label: "Giày nữ", path: "/ladiesFootwear" },
     ],
   },
   {

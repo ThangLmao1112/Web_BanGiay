@@ -13,7 +13,14 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
             throw new ApiError(401, "Unauthorized request");
         }
 
-        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        const accessTokenSecret =
+            process.env.ACCESS_TOKEN_SECRET || process.env.JWT_SECRET;
+        
+        if (!accessTokenSecret) {
+            throw new ApiError(500, "Missing ACCESS_TOKEN_SECRET or JWT_SECRET in environment");
+        }
+
+        const decodedToken = jwt.verify(token, accessTokenSecret);
         const user = await User.findById(decodedToken?._id).select(
             "-password -refreshToken"
         );

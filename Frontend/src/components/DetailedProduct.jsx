@@ -8,13 +8,54 @@ import ManageProducts from "../pages/ManageProducts";
 import ReviewsOnProduct from "./ReviewsOnProduct";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import LoadingOverlay from "./LoadingOverlay";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Button, Input } from "@material-tailwind/react";
+
+const FALLBACK_IMAGE = "https://placehold.co/600x600?text=No+Image";
+
+const normalizeColors = (colors) => {
+  if (!Array.isArray(colors) || colors.length === 0) return [];
+
+  if (typeof colors[0] === "string") {
+    try {
+      const parsed = JSON.parse(colors[0]);
+      if (Array.isArray(parsed)) return parsed;
+    } catch {
+      // Colors are already a regular string array.
+    }
+    return colors;
+  }
+
+  return colors;
+};
+
+const normalizeSizes = (sizes) => {
+  if (!Array.isArray(sizes) || sizes.length === 0) return [];
+
+  if (typeof sizes[0] === "string") {
+    try {
+      const parsed = JSON.parse(sizes[0]);
+      if (Array.isArray(parsed)) return parsed;
+    } catch {
+      // Sizes are already a regular string array.
+    }
+    return sizes;
+  }
+
+  return sizes;
+};
+
+const sanitizeImageObjects = (images) =>
+  (images || [])
+    .filter((img) => typeof img === "string" && img.trim() !== "")
+    .map((imageUrl) => ({ imageUrl }));
 
 const DetailedProduct = () => {
   const { productId } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState("");
@@ -50,22 +91,45 @@ const DetailedProduct = () => {
         const productDetails = response.data.data[0];
         setProduct(productDetails);
 
+        const fallbackImageObjects = sanitizeImageObjects(productDetails?.images);
+        const fallbackColors = normalizeColors(productDetails?.colors);
+
         const colorsResponse = await axios.get(
           `/api/products/colors-with-images/${productId}`
         );
         const fetchedColorsWithImages = colorsResponse.data.data;
-        setColorsWithImages(fetchedColorsWithImages);
+        const normalizedColorEntries = fetchedColorsWithImages?.length
+          ? fetchedColorsWithImages
+            : fallbackColors.map((color) => ({
+              color,
+              imageUrl: fallbackImageObjects[0]?.imageUrl || FALLBACK_IMAGE,
+            }));
 
-        if (fetchedColorsWithImages.length > 0) {
-          const firstColor = fetchedColorsWithImages[0].color;
+        setColorsWithImages(normalizedColorEntries);
 
-          const colorImagesResponse = await axios.get(
-            `/api/products/product/${productId}?color=${firstColor}`
-          );
-          const fetchedImages = colorImagesResponse.data.data;
+        if (normalizedColorEntries.length > 0) {
+          const firstColor = normalizedColorEntries[0].color;
 
-          setActiveImage(fetchedImages[0]?.imageUrl || "/default-image.jpg");
-          setColorImages(fetchedImages);
+          try {
+            const colorImagesResponse = await axios.get(
+              `/api/products/product/${productId}?color=${firstColor}`
+            );
+            const fetchedImages = colorImagesResponse.data.data;
+
+            if (Array.isArray(fetchedImages) && fetchedImages.length > 0) {
+              setActiveImage(fetchedImages[0]?.imageUrl || FALLBACK_IMAGE);
+              setColorImages(fetchedImages);
+            } else {
+              setActiveImage(fallbackImageObjects[0]?.imageUrl || FALLBACK_IMAGE);
+              setColorImages(fallbackImageObjects);
+            }
+          } catch {
+            setActiveImage(fallbackImageObjects[0]?.imageUrl || FALLBACK_IMAGE);
+            setColorImages(fallbackImageObjects);
+          }
+        } else {
+          setActiveImage(fallbackImageObjects[0]?.imageUrl || FALLBACK_IMAGE);
+          setColorImages(fallbackImageObjects);
         }
       } catch (error) {
         ErrorToast("Đã có lỗi khi tải thông tin sản phẩm");
@@ -78,8 +142,14 @@ const DetailedProduct = () => {
   }, [productId]);
 
   const handleAddToCart = async () => {
-    if (!userId || !productId) {
-      alert("Thiếu ID người dùng hoặc ID sản phẩm");
+    if (!productId) {
+      ErrorToast("Thiếu ID sản phẩm");
+      return;
+    }
+
+    if (!userId || !token) {
+      ErrorToast("Bạn cần đăng nhập để thêm vào giỏ hàng");
+      navigate("/login");
       return;
     }
 
@@ -89,7 +159,7 @@ const DetailedProduct = () => {
     }
 
     const cartData = {
-      quantity,
+      quantity: Number(quantity),
       size: selectedSize,
       color: selectedColor,
     };
@@ -100,7 +170,7 @@ const DetailedProduct = () => {
         cartData,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -145,7 +215,7 @@ const DetailedProduct = () => {
       const fetchedImages = colorImagesResponse.data.data;
 
       if (Array.isArray(fetchedImages)) {
-        setActiveImage(fetchedImages[0]?.imageUrl || "/default-image.jpg");
+        setActiveImage(fetchedImages[0]?.imageUrl || FALLBACK_IMAGE);
         setColorImages(fetchedImages);
       } else {
         throw new Error("Fetched data is not an array");
@@ -161,7 +231,7 @@ const DetailedProduct = () => {
     setSelectedSize(size);
   };
 
-  const sizes = product?.sizes ? JSON.parse(product.sizes[0]) : [];
+  const sizes = normalizeSizes(product?.sizes);
 
   if (!product) {
     return (

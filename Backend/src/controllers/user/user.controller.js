@@ -176,9 +176,16 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
   let decodedToken;
   try {
+    const refreshTokenSecret =
+      process.env.REFRESH_TOKEN_SECRET || process.env.JWT_SECRET;
+    
+    if (!refreshTokenSecret) {
+      throw new ApiError(500, "Missing REFRESH_TOKEN_SECRET or JWT_SECRET in environment");
+    }
+    
     decodedToken = jwt.verify(
       incomingRefreshToken,
-      process.env.REFRESH_TOKEN_SECRET
+      refreshTokenSecret
     );
   } catch {
     throw new ApiError(401, "Invalid refresh token");

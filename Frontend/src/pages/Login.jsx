@@ -26,12 +26,21 @@ const Login = () => {
     setLoading(true);
     try {
       const response = await axios.post("/api/users/login", formData);
-      console.log("Response data is", response.data.data.user._id);
-      const userId = response.data.data.user._id;
-      localStorage.setItem("userId", userId);
+      const authData = response?.data?.data || {};
+      const userId = authData?.user?._id;
+      const accessToken = authData?.accessToken || response?.data?.token;
+      const refreshToken = authData?.refreshToken;
 
-      const { token } = response.data;
-      localStorage.setItem("token", token);
+      if (!userId || !accessToken) {
+        throw new Error("Missing auth data from login response");
+      }
+
+      localStorage.setItem("userId", userId);
+      localStorage.setItem("token", accessToken);
+      if (refreshToken) {
+        localStorage.setItem("refreshToken", refreshToken);
+      }
+
       SuccessToast("Đăng nhập thành công!");
       setFormData({ email: "", password: "" });
       navigate(lastPath || "/");

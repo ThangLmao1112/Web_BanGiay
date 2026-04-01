@@ -20,62 +20,6 @@ const Home = () => {
         <Header onSearchClick={toggleSearch} searchVisible={searchVisible} />
       </div>
       <CarouselCustom />
-      <div>
-        <div>
-          <h1 className="text-center text-3xl mt-5 mb-3">Có gì mới</h1>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4 cursor-pointer">
-          {/* Image 1 */}
-          <div className="flex flex-col justify-center items-center text-center">
-            <img
-              src="https://1ststep.pk/cdn/shop/files/trevor_white_sneakers_0120360_1_720x.webp?v=1721993468"
-              alt="Placeholder 1"
-              className="rounded-full w-[8rem] h-[8rem] sm:w-[10rem] sm:h-[10rem] md:w-[12rem] md:h-[12rem] object-cover transition-transform duration-300 hover:scale-105"
-            />
-            <p className="mt-2 text-sm sm:text-md font-medium">Giày</p>
-          </div>
-
-          {/* Image 2 */}
-          <div className="flex flex-col justify-center items-center text-center">
-            <img
-              src="https://1ststep.pk/cdn/shop/files/4_9d4d1c59-3d0c-4d79-9b10-0a579d486c60_720x.webp?v=1719845724"
-              alt="Placeholder 2"
-              className="rounded-full w-[8rem] h-[8rem] sm:w-[10rem] sm:h-[10rem] md:w-[12rem] md:h-[12rem] object-cover transition-transform duration-300 hover:scale-105"
-            />
-            <p className="mt-2 text-sm sm:text-md font-medium">Sandal</p>
-          </div>
-
-          {/* Image 3 */}
-          <div className="flex flex-col justify-center items-center text-center">
-            <img
-              src="https://1ststep.pk/cdn/shop/files/1_7b10300b-2f86-48fc-bf47-5c637d91c79e_720x.webp?v=1702707735"
-              alt="Placeholder 3"
-              className="rounded-full w-[8rem] h-[8rem] sm:w-[10rem] sm:h-[10rem] md:w-[12rem] md:h-[12rem] object-cover transition-transform duration-300 hover:scale-105"
-            />
-            <p className="mt-2 text-sm sm:text-md font-medium">Giày cao gót</p>
-          </div>
-
-          {/* Image 4 */}
-          <div className="flex flex-col justify-center items-center text-center">
-            <img
-              src="https://1ststep.pk/cdn/shop/files/1_ef5f8f9b-c2c7-4c2d-a4b2-4baf31528536_720x.webp?v=1715173799"
-              alt="Placeholder 4"
-              className="rounded-full w-[8rem] h-[8rem] sm:w-[10rem] sm:h-[10rem] md:w-[12rem] md:h-[12rem] object-cover transition-transform duration-300 hover:scale-105"
-            />
-            <p className="mt-2 text-sm sm:text-md font-medium">Dép</p>
-          </div>
-
-          {/* Image 5 */}
-          <div className="flex flex-col justify-center items-center text-center">
-            <img
-              src="https://1ststep.pk/cdn/shop/files/1_0d759801-4a28-495c-9b9c-771c04631659_720x.jpg?v=1701321883"
-              alt="Placeholder 5"
-              className="rounded-full w-[8rem] h-[8rem] sm:w-[10rem] sm:h-[10rem] md:w-[12rem] md:h-[12rem] object-cover transition-transform duration-300 hover:scale-105"
-            />
-            <p className="mt-2 text-sm sm:text-md font-medium">Sneaker</p>
-          </div>
-        </div>
-      </div>
       <div className="">
         <h1 className="text-center text-3xl mt-5 mb-3">Xu hướng nổi bật</h1>
         {/* Video Elements in a Scrollable Row */}

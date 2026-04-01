@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { makeAdmin } from "../src/controllers/setAdmin/setAdmin.controller.js";
 
 dotenv.config({
-  path: "../.env",
+  path: "./.env",
 });
 console.log(process.env.MONGODB_URI);
 
@@ -15,7 +15,7 @@ const run = async () => {
     });
     console.log("Mongodb connected");
 
-    await makeAdmin("syedhishamshah27@gmail.com");
+    await makeAdmin("thangdemo01@gmail.com");
     await mongoose.connection.close();
   } catch (err) {
     console.error("Error:", err);

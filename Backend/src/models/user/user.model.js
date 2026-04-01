@@ -67,6 +67,15 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.methods.generateAccessToken = function () {
+  const accessTokenSecret =
+    process.env.ACCESS_TOKEN_SECRET || process.env.JWT_SECRET;
+  const accessTokenExpiry =
+    process.env.ACCESS_TOKEN_EXPIRY || process.env.JWT_EXPIRY || "1d";
+
+  if (!accessTokenSecret) {
+    throw new Error("Missing ACCESS_TOKEN_SECRET or JWT_SECRET in environment");
+  }
+
   return jwt.sign(
     {
       _id: this._id,
@@ -74,21 +83,30 @@ userSchema.methods.generateAccessToken = function () {
       firstName: this.firstName,
       lastName: this.lastName,
     },
-    process.env.ACCESS_TOKEN_SECRET,
+    accessTokenSecret,
     {
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+      expiresIn: accessTokenExpiry,
     }
   );
 };
 
 userSchema.methods.generateRefreshToken = function () {
+  const refreshTokenSecret =
+    process.env.REFRESH_TOKEN_SECRET || process.env.JWT_SECRET;
+  const refreshTokenExpiry =
+    process.env.REFRESH_TOKEN_EXPIRY || process.env.JWT_EXPIRY || "7d";
+
+  if (!refreshTokenSecret) {
+    throw new Error("Missing REFRESH_TOKEN_SECRET or JWT_SECRET in environment");
+  }
+
   return jwt.sign(
     {
       _id: this._id,
     },
-    process.env.REFRESH_TOKEN_SECRET,
+    refreshTokenSecret,
     {
-      expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+      expiresIn: refreshTokenExpiry,
     }
   );
 };

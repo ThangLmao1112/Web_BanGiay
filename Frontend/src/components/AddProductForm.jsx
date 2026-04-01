@@ -17,10 +17,7 @@ const API_URL = "/api/products";
 
 const SUBCATEGORY_LABELS = {
   Sandals: "Sandal",
-  Slippers: "Dép",
-  Shoes: "Giày",
   Sneakers: "Sneaker",
-  Pumps: "Giày cao gót",
 };
 
 const AddProductForm = () => {
@@ -207,10 +204,7 @@ const AddProductForm = () => {
       setLoading(false);
     }
   };
-  const availableSubcategories =
-    formData.category === "Ladies Footwear"
-      ? ["Sandals", "Slippers", "Shoes", "Sneakers", "Pumps"]
-      : ["Sandals", "Slippers", "Shoes", "Sneakers"];
+  const availableSubcategories = ["Sandals", "Sneakers"];
 
   return (
     <div className="max-w-2xl mx-auto p-8 bg-white shadow-lg rounded-lg">
