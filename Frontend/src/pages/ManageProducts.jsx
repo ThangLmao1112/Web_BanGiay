@@ -122,13 +122,30 @@ const ManageProducts = ({
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      setFilteredProducts(
-        filteredProducts.filter((product) => product._id !== productId)
+      setFilteredProducts((prev) =>
+        prev.filter((product) => product._id !== productId)
       );
-      setProducts(products.filter((product) => product._id !== productId));
+      setProducts((prev) => prev.filter((product) => product._id !== productId));
+      setAllProducts((prev) =>
+        prev.filter((product) => product._id !== productId)
+      );
       SuccessToast("Xóa sản phẩm thành công");
     } catch (error) {
-      ErrorToast("Xóa sản phẩm thất bại: " + error.message);
+      const status = error?.response?.status;
+      const message = error?.response?.data?.message || error.message;
+
+      if (status === 404) {
+        setFilteredProducts((prev) =>
+          prev.filter((product) => product._id !== productId)
+        );
+        setProducts((prev) => prev.filter((product) => product._id !== productId));
+        setAllProducts((prev) =>
+          prev.filter((product) => product._id !== productId)
+        );
+        ErrorToast("Sản phẩm này đã bị xóa trước đó.");
+      } else {
+        ErrorToast(`Xóa sản phẩm thất bại: ${message}`);
+      }
     } finally {
       setLoading(false);
     }

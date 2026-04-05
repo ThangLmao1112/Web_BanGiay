@@ -180,6 +180,10 @@ const ProductCards = ({
                         src={image}
                         alt={`Product Image ${index + 1}`}
                         className="h-80 w-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = FALLBACK_IMAGE;
+                        }}
                       />
                       <FaEdit
                         className="absolute bottom-4 right-4 text-gray-400 text-xl cursor-pointer"

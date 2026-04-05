@@ -10,15 +10,26 @@ cloudinary.config({
 const uploadOnCloudinary = async (localFilePath) => {
   try {
     if (!localFilePath) return null;
+
+    if (
+      !process.env.CLOUDINARY_CLOUD_NAME ||
+      !process.env.CLOUDINARY_API_KEY ||
+      !process.env.CLOUDINARY_API_SECRET
+    ) {
+      return null;
+    }
+
     const response = await cloudinary.uploader.upload(localFilePath, {
       folder: "the-shoe-shop-products",
       resource_type: "auto",
     });
-    fs.unlinkSync(localFilePath);
+    if (fs.existsSync(localFilePath)) {
+      fs.unlinkSync(localFilePath);
+    }
 
     return response;
   } catch (error) {
-    fs.unlinkSync(localFilePath);
+    // Keep the local file for non-Cloudinary fallback URLs.
     return null;
   }
 };

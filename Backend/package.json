@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js",
+    "seed:admin": "node scripts/setAdmin.js",
     "seed:footwear": "node scripts/seedFootwearProducts.js",
     "verify:footwear": "node scripts/verifyFootwearCounts.js",
     "seed:test-user": "node scripts/createTestUser.js"

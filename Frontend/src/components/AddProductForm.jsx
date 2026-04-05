@@ -107,6 +107,9 @@ const AddProductForm = () => {
     let newErrors = {};
 
     if (!formData.name.trim()) newErrors.name = "Tên sản phẩm là bắt buộc.";
+    else if (formData.name.trim().length < 2)
+      newErrors.name = "Tên sản phẩm phải có ít nhất 2 ký tự.";
+
     if (!formData.category.trim()) newErrors.category = "Danh mục là bắt buộc.";
     if (!formData.subcategory.trim())
       newErrors.subcategory = "Danh mục con là bắt buộc.";
@@ -202,7 +205,10 @@ const AddProductForm = () => {
       setSelectedFiles([null, null]);
       setErrors({});
     } catch (error) {
-      ErrorToast("Thêm sản phẩm thất bại. Vui lòng thử lại.");
+      ErrorToast(
+        error?.response?.data?.message ||
+          "Thêm sản phẩm thất bại. Vui lòng thử lại."
+      );
     } finally {
       setLoading(false);
     }

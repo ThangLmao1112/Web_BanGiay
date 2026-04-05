@@ -10,19 +10,50 @@ import {
 } from "../../utils/cloudinary.js";
 import mongoose from "mongoose";
 
+const normalizeArrayInput = (value) => {
+  if (Array.isArray(value)) {
+    return value.map((item) => String(item).trim()).filter(Boolean);
+  }
+
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed)) {
+        return parsed.map((item) => String(item).trim()).filter(Boolean);
+      }
+    } catch {
+      // The value is a regular string, not a JSON string.
+    }
+
+    const trimmed = value.trim();
+    return trimmed ? [trimmed] : [];
+  }
+
+  return [];
+};
+
+const toPublicImageUrl = (req, filePath) => {
+  const normalizedPath = String(filePath || "").replace(/\\/g, "/");
+  const publicPath = normalizedPath.startsWith("public/")
+    ? normalizedPath.replace("public", "")
+    : `/${normalizedPath}`;
+
+  return `${req.protocol}://${req.get("host")}${publicPath}`;
+};
+
 const addProduct = asyncHandler(async (req, res) => {
   const {
     name,
     description,
     price,
-    sizes = [],
-    availableColors = [],
     category,
     subcategory,
     stock,
   } = req.body;
 
-  const colors = req.body.colors || [];
+  const sizes = normalizeArrayInput(req.body.sizes);
+  const availableColors = normalizeArrayInput(req.body.availableColors);
+  const colors = normalizeArrayInput(req.body.colors);
   const images = req.files || [];
 
   if (
@@ -43,7 +74,15 @@ const addProduct = asyncHandler(async (req, res) => {
   }
 
   const uploadPromises = images.map((file) => uploadOnCloudinary(file.path));
-  const resultOfUploadImagesOnCloudinary = await Promise.all(uploadPromises);
+  const uploadedImages = await Promise.all(uploadPromises);
+
+  const resolvedImageUrls = uploadedImages.map((uploadedImage, index) => {
+    if (uploadedImage?.url) {
+      return uploadedImage.url;
+    }
+
+    return toPublicImageUrl(req, images[index].path);
+  });
 
   const product = new Product({
     name,
@@ -57,13 +96,11 @@ const addProduct = asyncHandler(async (req, res) => {
   });
   const savedProduct = await product.save();
 
-  const saveImageUrl = resultOfUploadImagesOnCloudinary.map(
-    (uploadedImage, index) => ({
+  const saveImageUrl = resolvedImageUrls.map((imageUrl, index) => ({
       productId: savedProduct._id,
       color: colors[index],
-      imageUrl: uploadedImage.url,
-    })
-  );
+      imageUrl,
+    }));
 
   const insertImages = await Image.insertMany(saveImageUrl);
 
@@ -86,27 +123,27 @@ const removeProduct = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Product ID is required");
   }
 
-  const productToDelete = await Product.findByIdAndDelete(productId);
+  const productToDelete = await Product.findById(productId);
   if (!productToDelete) {
     throw new ApiError(404, "Product not found");
   }
 
   const productImagesToDelete = await Image.find({ productId });
-  if (!productImagesToDelete || productImagesToDelete.length === 0) {
-    throw new ApiError(500, "No images found for this product");
-  }
 
-  const imageDeletionPromises = productImagesToDelete.map((image) =>
-    deleteFromCloudinary(image.imageUrl, "image")
-  );
+  if (productImagesToDelete.length > 0) {
+    const cloudinaryImageUrls = productImagesToDelete
+      .map((image) => image.imageUrl)
+      .filter((url) => typeof url === "string" && url.includes("res.cloudinary.com"));
 
-  const results = await Promise.all(imageDeletionPromises);
-
-  if (results.some((result) => !result)) {
-    throw new ApiError(500, "Some images could not be deleted from Cloudinary");
+    await Promise.all(
+      cloudinaryImageUrls.map((imageUrl) =>
+        deleteFromCloudinary(imageUrl, "image").catch(() => null)
+      )
+    );
   }
 
   await Image.deleteMany({ productId });
+  await Product.findByIdAndDelete(productId);
 
   return res
     .status(200)
@@ -187,7 +224,7 @@ const updateProductDetails = asyncHandler(async (req, res) => {
   }
 });
 const updateProductImagesAndColors = asyncHandler(async (req, res) => {
-  const colors = req.body.colors || [];
+  const colors = normalizeArrayInput(req.body.colors);
   if (!colors || colors.length === 0) {
     throw new ApiError(400, "Color should be selected for each product image");
   }
@@ -247,7 +284,7 @@ const updateProductImagesAndColors = asyncHandler(async (req, res) => {
     (uploadedImage, index) => ({
       productId,
       color: colors[index],
-      imageUrl: uploadedImage.url,
+      imageUrl: uploadedImage?.url || toPublicImageUrl(req, imagesLocalPath[index].path),
     })
   );
 
