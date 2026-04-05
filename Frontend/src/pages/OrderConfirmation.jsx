@@ -8,6 +8,20 @@ import {
   ListItem,
 } from "@material-tailwind/react";
 
+const toVnd = (amount) =>
+  new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+    maximumFractionDigits: 0,
+  }).format(Number(amount || 0) * 1000);
+
+const PAYMENT_METHOD_LABELS = {
+  "Credit Card": "Thẻ tín dụng",
+  JazzCash: "JazzCash",
+  EasyPaisa: "EasyPaisa",
+  "Cash on Delivery": "Thanh toán khi nhận hàng",
+};
+
 const OrderConfirmation = () => {
   const { orderId } = useParams();
   const { state } = useLocation();
@@ -44,12 +58,12 @@ const OrderConfirmation = () => {
                 className="flex justify-start mb-2 gap-8"
               >
                 <span>{item.productDetails.name}</span>
-                <span>Rs {item.productDetails.price * item.quantity}</span>
+                <span>{toVnd(item.productDetails.price * item.quantity)}</span>
               </div>
             ))}
             <div className="flex justify-start gap-8 font-semibold text-lg mt-4">
               <span>Tổng tiền:</span>
-              <span>Rs {totalAmount}</span>
+              <span>{toVnd(totalAmount)}</span>
             </div>
           </div>
           <hr />
@@ -63,7 +77,8 @@ const OrderConfirmation = () => {
               <strong>Địa chỉ giao hàng:</strong> {shippingAddress}
             </ListItem>
             <ListItem className="flex gap-8">
-              <strong>Phương thức thanh toán:</strong> {paymentMethod}
+              <strong>Phương thức thanh toán:</strong>{" "}
+              {PAYMENT_METHOD_LABELS[paymentMethod] || paymentMethod}
             </ListItem>
           </List>
 

@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaHome, FaUsers, FaShoppingBag, FaCog } from "react-icons/fa";
 import { MdArchive } from "react-icons/md";
 import { FaBars, FaTimes } from "react-icons/fa";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import AddProductForm from "../components/AddProductForm";
 import UserList from "../components/UserList";
 import UserDeleteList from "../components/UserDeleteList";
 import MostActiveUsers from "../components/MostActiveUsers";
 import ManageProducts from "./ManageProducts";
 import AllProducts from "../components/AllProducts";
+import AdminOrderManagement from "../components/AdminOrderManagement";
+import Profile from "./Profile";
 
 const sidebarItems = [
   { label: "Bảng điều khiển", icon: FaHome, component: <div>Bảng điều khiển</div> },
@@ -51,31 +55,28 @@ const userManagementItems = [
 ];
 
 const orderManagementItems = [
-  { label: "Xem đơn hàng", component: <div>Khu vực xem đơn hàng</div> },
+  { label: "Xem đơn hàng", component: <AdminOrderManagement mode="view" /> },
   {
     label: "Cập nhật trạng thái đơn",
-    component: <div>Khu vực cập nhật trạng thái đơn</div>,
+    component: <AdminOrderManagement mode="update" />,
   },
-  { label: "Hủy đơn hàng", component: <div>Khu vực hủy đơn hàng</div> },
-  { label: "Tất cả đơn hàng", component: <div>Khu vực tất cả đơn hàng</div> },
+  { label: "Hủy đơn hàng", component: <AdminOrderManagement mode="cancel" /> },
+  { label: "Tất cả đơn hàng", component: <AdminOrderManagement mode="all" /> },
 ];
 
 const settingsItems = [
   {
-    label: "Cài đặt hồ sơ",
-    component: <div>Khu vực cài đặt hồ sơ</div>,
-  },
-  { label: "Cài đặt hệ thống", component: <div>Khu vực cài đặt hệ thống</div> },
-  {
-    label: "Cài đặt bảo mật",
-    component: <div>Khu vực cài đặt bảo mật</div>,
+    label: "Hồ sơ & mật khẩu",
+    component: <Profile />,
   },
 ];
 
 const AdminPanel = () => {
+  const navigate = useNavigate();
   const [activeComponent, setActiveComponent] = useState(
     sidebarItems[0].component
   );
+  const [checkingAccess, setCheckingAccess] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
@@ -89,6 +90,41 @@ const AdminPanel = () => {
     setIsOrderDropdownOpen(false);
     setIsSettingsDropdownOpen(false);
   };
+
+  useEffect(() => {
+    const verifyAdminAccess = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      try {
+        const response = await axios.get("/api/users/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response?.data?.data?.role !== "admin") {
+          navigate("/");
+          return;
+        }
+      } catch (error) {
+        navigate("/login");
+        return;
+      } finally {
+        setCheckingAccess(false);
+      }
+    };
+
+    verifyAdminAccess();
+  }, [navigate]);
+
+  if (checkingAccess) {
+    return <div className="p-6">Đang kiểm tra quyền truy cập...</div>;
+  }
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-100">

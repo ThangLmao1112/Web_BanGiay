@@ -159,6 +159,7 @@ const getCart = asyncHandler(async (req, res) => {
 
 const deleteCartItem = asyncHandler(async (req, res) => {
   const { userId, productId } = req.params;
+  const { size, color } = req.body || {};
 
   if (!userId || !productId) {
     throw new ApiError(400, "User ID and Product ID are required to proceed");
@@ -174,9 +175,17 @@ const deleteCartItem = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Cart not found");
   }
 
-  const itemIndex = cart.items.findIndex(
-    (item) => item.product.toString() === productId
-  );
+  const itemIndex = cart.items.findIndex((item) => {
+    const isSameProduct = item.product.toString() === productId;
+    if (!isSameProduct) return false;
+
+    // If size/color are provided, delete the exact variant only.
+    if (size || color) {
+      return item.size === size && item.color === color;
+    }
+
+    return true;
+  });
 
   if (itemIndex === -1) {
     throw new ApiError(404, "Item not found in cart");
@@ -191,8 +200,75 @@ const deleteCartItem = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, cart, "Item removed from cart successfully"));
 });
 
+const updateCartItem = asyncHandler(async (req, res) => {
+  const { userId, productId } = req.params;
+  const {
+    quantity,
+    oldSize,
+    oldColor,
+    newSize,
+    newColor,
+  } = req.body || {};
+
+  if (!userId || !productId) {
+    throw new ApiError(400, "User ID and Product ID are required to proceed");
+  }
+
+  if (!quantity || Number(quantity) < 1) {
+    throw new ApiError(400, "Quantity must be at least 1");
+  }
+
+  const user = await User.findById(userId).select("-password -refreshToken");
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const cart = await Cart.findOne({ user: user._id });
+  if (!cart) {
+    throw new ApiError(404, "Cart not found");
+  }
+
+  const sourceIndex = cart.items.findIndex(
+    (item) =>
+      item.product.toString() === productId &&
+      item.size === oldSize &&
+      item.color === oldColor
+  );
+
+  if (sourceIndex === -1) {
+    throw new ApiError(404, "Item to update not found in cart");
+  }
+
+  const targetSize = newSize || oldSize;
+  const targetColor = newColor || oldColor;
+
+  const existingTargetIndex = cart.items.findIndex(
+    (item, idx) =>
+      idx !== sourceIndex &&
+      item.product.toString() === productId &&
+      item.size === targetSize &&
+      item.color === targetColor
+  );
+
+  if (existingTargetIndex !== -1) {
+    // Merge into existing target variant to avoid duplicate lines.
+    cart.items[existingTargetIndex].quantity = Number(quantity);
+    cart.items.splice(sourceIndex, 1);
+  } else {
+    cart.items[sourceIndex].size = targetSize;
+    cart.items[sourceIndex].color = targetColor;
+    cart.items[sourceIndex].quantity = Number(quantity);
+  }
+
+  await cart.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, cart, "Cart item updated successfully"));
+});
+
 const getTotalItemsInCart = asyncHandler(async (req, res) => {
-  const { userId } = req.params;
+  const userId = req.user?._id || req.params.userId;
 
   if (!userId) {
     throw new ApiError(400, "User ID is required to proceed");
@@ -236,6 +312,7 @@ export {
   createCart,
   getCart,
   deleteCartItem,
+  updateCartItem,
   getTotalItemsInCart,
   deleteCartItems,
 };

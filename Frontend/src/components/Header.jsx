@@ -1,127 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from 'axios';
 import { NavLink } from "react-router-dom";
 import logo from "../assets/webs-log.png";
 import AvatarWithUserDropdown from "../components/AvatarWithUserDropdown";
 import {
   Navbar,
-  Collapse,
   Typography,
   IconButton,
-  List,
-  ListItem,
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
   Input,
   Button,
   Badge
 } from "@material-tailwind/react";
-import { HiBars3, HiOutlineXMark } from "react-icons/hi2";
-import { CiSearch, CiShoppingCart } from "react-icons/ci";
-import { useNavigate } from "react-router-dom";
-
-function NavListMenu({ label, menuItems }) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const renderItems = menuItems.map(({ title, path }, key) => (
-    <MenuItem className="rounded-lg p-2 hover:bg-transparent" key={key}>
-      {path ? (
-        <NavLink to={path}>
-          <Typography
-            variant="h6"
-            color="blue-gray"
-            className="text-sm font-bold"
-          >
-            {title}
-          </Typography>
-        </NavLink>
-      ) : (
-        <Typography
-          variant="h6"
-          color="blue-gray"
-          className="text-sm font-bold"
-        >
-          {title}
-        </Typography>
-      )}
-    </MenuItem>
-  ));
-
-  return (
-    <React.Fragment>
-      <Menu
-        open={isMenuOpen}
-        handler={setIsMenuOpen}
-        offset={{ mainAxis: 20 }}
-        placement="bottom"
-        allowHover={true}
-      >
-        <MenuHandler>
-          <Typography as="div" variant="small" className="font-medium">
-            <ListItem
-              className="py-2 pr-4 font-medium text-gray-900"
-              selected={isMenuOpen || isMobileMenuOpen}
-              onClick={() => setIsMobileMenuOpen((cur) => !cur)}
-            >
-              {label}
-            </ListItem>
-          </Typography>
-        </MenuHandler>
-        <MenuList className="hidden max-w-screen-xl rounded-xl lg:block">
-          <ul className="grid gap-y-2 outline-none outline-0">{renderItems}</ul>
-        </MenuList>
-      </Menu>
-      <div className="block lg:hidden">
-        <Collapse open={isMobileMenuOpen}>{renderItems}</Collapse>
-      </div>
-    </React.Fragment>
-  );
-}
-
-
-function NavList({ navItems }) {
-  return (
-    <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1">
-      {navItems.map((item) => {
-        if (item.path) {
-          return (
-            <NavLink key={item.label} to={item.path}>
-              <ListItem className="py-2 pr-4 font-medium text-gray-900">
-                {item.label}
-              </ListItem>
-            </NavLink>
-          );
-        }
-
-        return (
-          <NavListMenu key={item.label} label={item.label} menuItems={item.menuItems} />
-        );
-      })}
-    </List>
-  );
-}
-
-const Header = ({ onSearchClick, searchVisible }) => {
-  const [openNav, setOpenNav] = useState(false);
-  const [navbarPosition, setNavbarPosition] = useState("top-8");
+import { CiShoppingCart } from "react-icons/ci";
+import { useLocation, useNavigate } from "react-router-dom";
+const Header = () => {
   const [navbarHeight, setNavbarHeight] = useState("h-[8rem]");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userFirstName, setUserFirstName] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [totalItems, setTotalItems] = useState(0);
-  const [loading , setLoading] = useState(false)
   const navigate = useNavigate();
-  const userId = localStorage.getItem("userId");
+  const location = useLocation();
 
   const t = {
-    freeDelivery: "Miễn phí giao hàng cho đơn từ Rs.3000 trở lên",
-    gentsFootwear: "GIÀY NAM",
-    ladiesFootwear: "GIÀY NỮ",
-    trackOrder: "Theo dõi đơn hàng",
     signIn: "Đăng nhập",
     signUp: "Đăng ký",
     searchLabel: "Nhập để tìm",
@@ -129,17 +31,6 @@ const Header = ({ onSearchClick, searchVisible }) => {
     searchButton: "Tìm",
     searchError: "Vui lòng nhập tên sản phẩm để tìm kiếm.",
   };
-
-  const navItems = [
-    {
-      label: t.gentsFootwear,
-      path: "/gentsFootwear",
-    },
-    {
-      label: t.ladiesFootwear,
-      path: "/ladiesFootwear",
-    },
-  ];
 
   useEffect(() => {
     const fetchUserFirstName = async () => {
@@ -159,40 +50,48 @@ const Header = ({ onSearchClick, searchVisible }) => {
     fetchUserFirstName();
   }, []);
 
+  const fetchTotalItems = useCallback(async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setTotalItems(0);
+      return;
+    }
+
+    try {
+      const response = await axios.get(`/api/cart/total-items/user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setTotalItems(response?.data?.data?.totalItems || 0);
+    } catch (error) {
+      setTotalItems(0);
+      console.error("Failed to fetch cart total items:", error);
+    }
+  }, []);
+
   useEffect(() => {
-    const fetchTotalItems = async () => {
-      if (!userId) {
-        setErrorMessage("User ID not found");
-        setLoading(false);
-        return;
-      }
+    fetchTotalItems();
+  }, [fetchTotalItems, location.pathname]);
 
-      try {
-        const response = await axios.get(`/api/cart/total-items/user/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-
-        setTotalItems(response.data.data.totalItems);
-      } catch (error) {
-        setErrorMessage("Failed to fetch total items");
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
+  useEffect(() => {
+    const handleCartUpdated = () => {
+      fetchTotalItems();
     };
 
-    fetchTotalItems();
-  }, [userId]);
+    window.addEventListener("cart-updated", handleCartUpdated);
+    return () => {
+      window.removeEventListener("cart-updated", handleCartUpdated);
+    };
+  }, [fetchTotalItems]);
 
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
-        setNavbarPosition("top-0");
         setNavbarHeight("h-[4rem]");
       } else {
-        setNavbarPosition("top-8");
         setNavbarHeight("h-[8rem]");
       }
     };
@@ -202,18 +101,11 @@ const Header = ({ onSearchClick, searchVisible }) => {
     };
   }, []);
 
-  useEffect(() => {
-    window.addEventListener(
-      "resize",
-      () => window.innerWidth >= 960 && setOpenNav(false)
-    );
-  }, []);
-
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (!searchQuery.trim()) {
       setErrorMessage(t.searchError);
-      setInterval(() => {
+      setTimeout(() => {
         setErrorMessage("");
       }, 2000);
       return;
@@ -230,14 +122,11 @@ const Header = ({ onSearchClick, searchVisible }) => {
 
   return (
     <div>
-      <h1 className="flex bg-black text-white h-8 justify-center items-center">
-        {t.freeDelivery}
-      </h1>
       <Navbar
-        className={`fixed ${navbarPosition} left-0 right-0 z-50 mx-auto max-w-screen-3xl px-4 py-2 ${navbarHeight} transition-all duration-300`}
+        className={`fixed top-0 left-0 right-0 z-50 mx-auto max-w-screen-3xl px-4 py-2 ${navbarHeight} transition-all duration-300`}
       >
-        <div className="flex items-center justify-between text-blue-gray-900 h-full">
-          <div>
+        <div className="flex items-center justify-between gap-4 text-blue-gray-900 h-full">
+          <div className="shrink-0">
             <img
               className={`w-24 sm:w-22 md:w-40 lg:w-30 xl:w-40 2xl:w-54 h-auto transition-all duration-300 cursor-pointer`}
               src={logo}
@@ -246,19 +135,26 @@ const Header = ({ onSearchClick, searchVisible }) => {
             />
           </div>
 
-          <div className="flex flex-1 items-center gap-4 justify-center">
-            <div className="hidden lg:block">
-              <NavList navItems={navItems} />
-            </div>
-            <Typography className="hidden lg:block text-sm">
-              {t.trackOrder}
-            </Typography>
+          <div className="hidden md:flex flex-1 justify-center px-2 lg:px-6">
+            <form onSubmit={handleSearchSubmit} className="flex w-full max-w-xl items-center gap-2">
+              <Input
+                variant="outlined"
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                label={t.searchLabel}
+                placeholder={t.searchPlaceholder}
+                className="w-full"
+              />
+              <Button type="submit">{t.searchButton}</Button>
+            </form>
           </div>
-          <div className="flex space-x-4">
+
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
             {isAuthenticated ? (
               <>
                 {userFirstName && (
-                  <Typography className="flex items-center mr-5">
+                  <Typography className="hidden sm:flex items-center">
                     {userFirstName}
                   </Typography>
                 )}
@@ -284,69 +180,13 @@ const Header = ({ onSearchClick, searchVisible }) => {
                 </NavLink>
               </>
             )}
-          </div>
-          <div className="hidden gap-2 lg:flex items-center mr-2">
-            <div className="">
-              <IconButton className="bg-white" onClick={onSearchClick}>
-                <CiSearch style={{ color: "black", fontSize: "2.5em" }} />
-              </IconButton>
-            </div>
 
-            <div
-              className={`absolute inset-x-0 mx-auto w-1/2 bg-white/80 p-2 shadow-lg transition-all duration-500 ease-in-out top-full rounded-sm mt-1  ${
-                searchVisible ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
-              }`}
-              style={{ maxWidth: "600px" }}
-            >
-              {" "}
-              <form onSubmit={handleSearchSubmit} className="flex">
-                <Input
-                  variant="standard"
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  label={t.searchLabel}
-                  placeholder={t.searchPlaceholder}
-                  className="w-full p-2 border border-gray-300 rounded-md border-none"
-                  min={1}
-                />
-                <div className="flex flex-col">
-                  <Button type="submit" className="">
-                    {t.searchButton}
-                  </Button>
-                </div>
-              </form>
-              {errorMessage && (
-                <p
-                  className={`absolute inset-x-0 mx-auto w-2/3 bg-white/80 text-red-500 text-sm text-center font-semibold p-2 shadow-lg transition-all duration-900 ease-in-out top-full rounded-sm mt-1  ${
-                    searchVisible ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
-                  }`}
-                  style={{ maxWidth: "600px" }}
-                >
-                  {errorMessage}
-                </p>
-              )}
-            </div>
-            {/* CiShoppingCart */}
-              <Badge content={totalItems} withBorder>
+            <Badge content={totalItems} withBorder>
               <IconButton className="bg-white" onClick={handleCart}>
-              <CiShoppingCart style={{ color: "black", fontSize: "2.5em" }} />
-            </IconButton>
+                <CiShoppingCart style={{ color: "black", fontSize: "2.5em" }} />
+              </IconButton>
             </Badge>
-            
-          </div>
-          <div className="flex items-center">
-            <button
-              color="white"
-              className="lg:hidden mr-1"
-              onClick={() => setOpenNav(!openNav)}
-            >
-              {openNav ? (
-                <HiOutlineXMark className="h-6 w-6" strokeWidth={2} />
-              ) : (
-                <HiBars3 className="h-6 w-6" strokeWidth={2} />
-              )}
-            </button>
+
             {isAuthenticated ? (
               <div className="w-full flex items-center justify-center">
                 <AvatarWithUserDropdown />
@@ -356,22 +196,34 @@ const Header = ({ onSearchClick, searchVisible }) => {
             )}
           </div>
         </div>
-        <Collapse open={openNav}>
-          <div className="bg-white pb-5">
-            <NavList navItems={navItems} />
-            <Typography className="text-black -mt-5 mb-2 ml-3">
-              {t.trackOrder}
-            </Typography>
-            <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
-              <IconButton className="bg-white">
-                <CiSearch style={{ color: "black", fontSize: "2.5em" }} />
-              </IconButton>
-              <IconButton className="bg-white">
-                <CiShoppingCart style={{ color: "black", fontSize: "2.5em" }} />
-              </IconButton>
-            </div>
-          </div>
-        </Collapse>
+
+        <div className="md:hidden mt-3 px-1">
+          <form onSubmit={handleSearchSubmit} className="flex items-center gap-2">
+            <Input
+              variant="outlined"
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              label={t.searchLabel}
+              placeholder={t.searchPlaceholder}
+              className="w-full"
+            />
+            <Button type="submit">{t.searchButton}</Button>
+          </form>
+          {errorMessage && (
+            <p className="mt-2 text-red-500 text-sm font-semibold">
+              {errorMessage}
+            </p>
+          )}
+        </div>
+
+        <div className="hidden md:block">
+          {errorMessage && (
+            <p className="absolute left-1/2 -translate-x-1/2 top-full mt-1 bg-white/90 text-red-500 text-sm text-center font-semibold p-2 shadow rounded-sm">
+              {errorMessage}
+            </p>
+          )}
+        </div>
       </Navbar>
       <div className="pt-[8rem]"></div>
     </div>

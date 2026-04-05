@@ -67,7 +67,12 @@ const ProductUpdateForm = ({ productId, onClose }) => {
     try {
       await axios.patch(
         `/api/products/update-product-details/${productId}`,
-        formData
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
       SuccessToast("Cập nhật sản phẩm thành công");
       onClose();

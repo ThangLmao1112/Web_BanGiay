@@ -5,6 +5,13 @@ import SuccessToast from "../components/SuccessToast";
 import axios from "axios";
 import { Button, Select, Option, Textarea } from "@material-tailwind/react";
 
+const toVnd = (amount) =>
+  new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+    maximumFractionDigits: 0,
+  }).format(Number(amount || 0) * 1000);
+
 const Checkout = () => {
   const [cartItems, setCartItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
@@ -14,12 +21,22 @@ const Checkout = () => {
   const [error, setError] = useState(null);
 
   const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCartItems = async () => {
+      if (!userId || !token) {
+        setError("Bạn cần đăng nhập để thanh toán");
+        return;
+      }
+
       try {
-        const response = await axios.get(`/api/cart/get-cart/user/${userId}`);
+        const response = await axios.get(`/api/cart/get-cart/user/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const items = response.data.data.items || [];
         setCartItems(items);
 
@@ -29,14 +46,24 @@ const Checkout = () => {
         );
         setTotalAmount(total);
       } catch (err) {
-        setError("Không thể tải giỏ hàng");
+        setError(err?.response?.data?.message || "Không thể tải giỏ hàng");
       }
     };
 
     fetchCartItems();
-  }, [userId]);
+  }, [userId, token]);
 
   const handleCheckout = async () => {
+    if (!userId || !token) {
+      setError("Bạn cần đăng nhập để thanh toán");
+      return;
+    }
+
+    if (!Array.isArray(cartItems) || cartItems.length === 0) {
+      setError("Giỏ hàng đang trống");
+      return;
+    }
+
     if (!shippingAddress || !paymentMethod) {
       setError("Vui lòng nhập địa chỉ giao hàng và chọn phương thức thanh toán.");
       return;
@@ -57,8 +84,13 @@ const Checkout = () => {
         shippingAddress,
       };
 
-      const response = await axios.post("/api/orders/create", orderData);
+      const response = await axios.post("/api/orders/create", orderData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.status === 201) {
+        window.dispatchEvent(new Event("cart-updated"));
         const orderId = response.data.data._id;
         navigate(`/orderConfirmation/${orderId}`, {
           state: {
@@ -70,7 +102,7 @@ const Checkout = () => {
         });
       }
     } catch (error) {
-      setError("Đặt hàng thất bại. Vui lòng thử lại.");
+      setError(error?.response?.data?.message || "Đặt hàng thất bại. Vui lòng thử lại.");
     } finally {
       setLoading(false);
     }
@@ -117,12 +149,12 @@ const Checkout = () => {
             className="flex justify-between mb-2"
           >
             <span>{item.productDetails.name}</span>
-            <span>Rs {item.productDetails.price * item.quantity}</span>
+            <span>{toVnd(item.productDetails.price * item.quantity)}</span>
           </div>
         ))}
         <div className="flex justify-between font-semibold text-lg mt-4">
           <span>Tổng tiền:</span>
-          <span>Rs {totalAmount}</span>
+          <span>{toVnd(totalAmount)}</span>
         </div>
       </div>
 

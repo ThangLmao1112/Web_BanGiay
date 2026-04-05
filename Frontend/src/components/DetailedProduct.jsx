@@ -12,6 +12,12 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Button, Input } from "@material-tailwind/react";
 
 const FALLBACK_IMAGE = "https://placehold.co/600x600?text=No+Image";
+const toVnd = (amount) =>
+  new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+    maximumFractionDigits: 0,
+  }).format(Number(amount || 0) * 1000);
 
 const normalizeColors = (colors) => {
   if (!Array.isArray(colors) || colors.length === 0) return [];
@@ -67,7 +73,7 @@ const DetailedProduct = () => {
   const [selectedColor, setSelectedColor] = useState(
     location.state?.selectedColor || ""
   );
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(location.state?.selectedQuantity || 1);
   const [isFilled, setIsFilled] = useState(false);
   const [inventoryStatus, setInventoryStatus] = useState({
     textColor: "",
@@ -76,6 +82,8 @@ const DetailedProduct = () => {
   });
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     if (!productId) {
       ErrorToast("Thiếu ID sản phẩm");
       return;
@@ -165,19 +173,46 @@ const DetailedProduct = () => {
     };
 
     try {
-      const response = await axios.post(
-        `/api/cart/create-cart/user/${userId}/product/${productId}`,
-        cartData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+      const isCartEditMode = Boolean(location.state?.cartEditMode);
+
+      if (isCartEditMode) {
+        await axios.patch(
+          `/api/cart/update-item/user/${userId}/product/${productId}`,
+          {
+            quantity: Number(quantity),
+            oldSize: location.state?.oldSize,
+            oldColor: location.state?.oldColor,
+            newSize: selectedSize,
+            newColor: selectedColor,
           },
-        }
-      );
-      SuccessToast("Đã thêm sản phẩm vào giỏ hàng");
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } else {
+        await axios.post(
+          `/api/cart/create-cart/user/${userId}/product/${productId}`,
+          cartData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }
+
+      window.dispatchEvent(new Event("cart-updated"));
+      if (isCartEditMode) {
+        SuccessToast("Đã cập nhật sản phẩm trong giỏ hàng");
+        navigate("/cart");
+      } else {
+        SuccessToast("Đã thêm sản phẩm vào giỏ hàng");
+      }
     } catch (error) {
       console.error("Error adding item to cart", error);
-      ErrorToast("Không thể thêm sản phẩm vào giỏ hàng");
+      ErrorToast("Không thể cập nhật giỏ hàng");
     }
   };
 
@@ -291,7 +326,7 @@ const DetailedProduct = () => {
           </div>
           <p className="text-md font-semibold text-gray-700 mb-2">
             Giá:
-            <span className="font-normal"> Rs {product.price}</span>
+            <span className="font-normal"> {toVnd(product.price)}</span>
           </p>
           <p className="text-md text-gray-600 mb-2 font-semibold">
             Tồn kho: <span className="font-normal">{product.stock}</span>

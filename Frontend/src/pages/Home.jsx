@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { CarouselCustom } from "../components/CarouselCustom";
 import Header from "../components/Header";
 import MostRatedProducts from "../components/MostRatedProducts";
@@ -8,16 +8,10 @@ import { Button, Input } from "@material-tailwind/react";
 import Footer from "../components/Footer";
 
 const Home = () => {
-  const [searchVisible, setSearchVisible] = useState(false);
-
-  const toggleSearch = () => {
-    setSearchVisible(!searchVisible);
-  };
-
   return (
     <div>
       <div className="">
-        <Header onSearchClick={toggleSearch} searchVisible={searchVisible} />
+        <Header />
       </div>
       <CarouselCustom />
       <div className="">
@@ -127,7 +121,7 @@ const Home = () => {
         </div>
       </div>
       <div className="">
-        <h1 className="text-center text-3xl mt-5 mb-3">Bán chạy nhất</h1>
+        <h1 className="text-center text-3xl mt-5 mb-3">Danh mục sản phẩm</h1>
         <div className="">
           <MostRatedProducts />
         </div>

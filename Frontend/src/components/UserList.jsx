@@ -25,7 +25,11 @@ const UserList = ({ onDelete, showFullDetails = true }) => {
     setLoading(true);
     setError("");
     try {
+      const token = localStorage.getItem("token");
       const { data } = await axios.get(`/api/users/get-all-users`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         params: { page: currentPage, limit },
       });
 

@@ -7,7 +7,11 @@ import ErrorToast from "./ErrorToast";
 const UserDeleteList = () => {
   const handleDelete = async (userId) => {
     try {
-      await axios.delete(`/api/users/remove-user/${userId}`);
+      await axios.delete(`/api/users/remove-user/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       SuccessToast("Xóa người dùng thành công.");
     } catch (error) {
       ErrorToast("Xóa người dùng thất bại. Vui lòng thử lại sau.");

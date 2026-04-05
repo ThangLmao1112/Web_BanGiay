@@ -94,6 +94,11 @@ const ProductUpdateImage = ({productId, onClose}) => {
       const response = await axios.patch(
         `${API_URL}/update-product-images/${productId}`, 
         formDataToSend,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
       return response.data;
     } catch (error) {
@@ -108,7 +113,10 @@ const ProductUpdateImage = ({productId, onClose}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true)
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      setLoading(false)
+      return;
+    }
     
     try {
       await addImageColorPairs(imageColorPairs);

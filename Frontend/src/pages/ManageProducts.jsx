@@ -20,6 +20,8 @@ const CATEGORY_LABELS = {
   "Ladies Footwear": "Giày nữ",
 };
 
+const STABLE_CATEGORIES = ["All", "Gents Footwear", "Ladies Footwear"];
+
 const ManageProducts = ({
   renderSmallCard = false,
   allProductProp,
@@ -40,7 +42,7 @@ const ManageProducts = ({
   const navigate = useNavigate();
   const [allProducts, setAllProducts] = useState([]);
 
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
   
 
@@ -49,23 +51,26 @@ const ManageProducts = ({
   }, [currentPage, searchQuery]);
 
   useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  useEffect(() => {
     filterProducts();
-  }, [searchQuery, selectedCategory, products]);
+  }, [searchQuery, selectedCategory, allProducts]);
 
   const fetchProducts = async () => {
     setLoading(true);
     try {
+      const perPageLimit = allProductProp ? 100 : 10;
       const response = await axios.get(
-        `/api/products/all-products?page=${currentPage}&limit=10`
+        `/api/products/all-products?page=${currentPage}&limit=${perPageLimit}&search=${encodeURIComponent(searchQuery)}`
       );
       if (response.data && response.data.data) {
         const productDetails = response.data.data.ProductDetails || [];
         setProducts(productDetails);
         setAllProducts(productDetails);
         setTotalPages(response.data.data.TotalPages || 1);
-
-        const categoriesSet = new Set(productDetails.map((p) => p.category));
-        setCategories(["All", ...categoriesSet]);
+        setCategories(STABLE_CATEGORIES);
 
       } else {
         console.error("Unexpected API response format");
@@ -88,7 +93,9 @@ const ManageProducts = ({
 
     if (searchQuery) {
       filtered = filtered.filter((product) =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        String(product?.name || "")
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
       );
     }
 
@@ -98,12 +105,23 @@ const ManageProducts = ({
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
+    setCurrentPage(1);
+
+    if (searchQuery) {
+      const nextParams = new URLSearchParams(searchParams);
+      nextParams.delete("search");
+      setSearchParams(nextParams);
+    }
   };
 
   const handleProductDelete = async (productId) => {
     setLoading(true);
     try {
-      await axios.delete(`/api/products/remove-product/${productId}`);
+      await axios.delete(`/api/products/remove-product/${productId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       setFilteredProducts(
         filteredProducts.filter((product) => product._id !== productId)
       );

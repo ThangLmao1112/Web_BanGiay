@@ -277,7 +277,10 @@ const getAllProducts = asyncHandler(async (req, res) => {
     limit = 10,
     sortBy = "createdAt",
     sortType = "desc",
+    search = "",
   } = req.query;
+
+  const trimmedSearch = String(search || "").trim();
 
   const options = {
     page: parseInt(page, 10),
@@ -285,7 +288,20 @@ const getAllProducts = asyncHandler(async (req, res) => {
     sort: { [sortBy]: sortType === "desc" ? -1 : 1 },
   };
 
-  const aggregateQuery = Product.aggregate([
+  const aggregatePipeline = [];
+
+  if (trimmedSearch) {
+    aggregatePipeline.push({
+      $match: {
+        name: {
+          $regex: trimmedSearch,
+          $options: "i",
+        },
+      },
+    });
+  }
+
+  aggregatePipeline.push(
     {
       $lookup: {
         from: "images",
@@ -334,13 +350,11 @@ const getAllProducts = asyncHandler(async (req, res) => {
         totalImagesCount: 1,
       },
     },
-  ]);
+  );
+
+  const aggregateQuery = Product.aggregate(aggregatePipeline);
 
   const result = await Product.aggregatePaginate(aggregateQuery, options);
-
-  if (!result.docs || result.docs.length === 0) {
-    throw new ApiError(404, "No products found");
-  }
 
   return res.status(200).json(
     new ApiResponse(

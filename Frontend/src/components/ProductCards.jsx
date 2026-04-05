@@ -3,6 +3,12 @@ import { Carousel, IconButton, Button } from "@material-tailwind/react";
 import { FaEdit } from "react-icons/fa";
 
 const FALLBACK_IMAGE = "https://placehold.co/600x600?text=No+Image";
+const toVnd = (amount) =>
+  new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+    maximumFractionDigits: 0,
+  }).format(Number(amount || 0) * 1000);
 
 const ProductCards = ({
   product,
@@ -243,7 +249,7 @@ const ProductCards = ({
                 className="inline-block mx-2 w-5 border-t-2 border-gray-400"
                 onClick={() => onGetProductId(product._id)}
               ></span>
-              {product.price}
+              {toVnd(product.price)}
             </p>
 
             {!productDetails && (

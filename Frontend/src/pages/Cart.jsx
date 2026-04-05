@@ -6,6 +6,13 @@ import ErrorToast from "../components/ErrorToast";
 import SuccessToast from "../components/SuccessToast";
 import { Button } from "@material-tailwind/react";
 
+const toVnd = (amount) =>
+  new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+    maximumFractionDigits: 0,
+  }).format(Number(amount || 0) * 1000);
+
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -82,7 +89,7 @@ const Cart = () => {
     }
   }, [cartItems]);
 
-  const handleDeleteItem = async (productId) => {
+  const handleDeleteItem = async (productId, size, color) => {
     try {
       await axios.delete(
         `/api/cart/delete-item/user/${userId}/product/${productId}`,
@@ -90,14 +97,24 @@ const Cart = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
+          data: {
+            size,
+            color,
+          },
         }
       );
 
       SuccessToast("Đã xóa sản phẩm khỏi giỏ hàng");
+      window.dispatchEvent(new Event("cart-updated"));
 
       setCartItems((prevItems) => {
         const updatedItems = prevItems.filter(
-          (item) => item.product !== productId
+          (item) =>
+            !(
+              item.product === productId &&
+              item.size === size &&
+              item.color === color
+            )
         );
         if (updatedItems.length === 0) {
           setError(null);
@@ -111,11 +128,15 @@ const Cart = () => {
     }
   };
 
-  const handleUpdateItem = (item, size, color) => {
-    navigate(`/detailedProduct/${item}`, {
+  const handleUpdateItem = (productId, size, color, quantity) => {
+    navigate(`/detailedProduct/${productId}`, {
       state: {
         selectedSize: size,
         selectedColor: color,
+        selectedQuantity: quantity,
+        cartEditMode: true,
+        oldSize: size,
+        oldColor: color,
       },
     });
   };
@@ -176,7 +197,7 @@ const Cart = () => {
                   <span className="font-normal"> {item.quantity}</span>
                 </p>
                 <p className="text-gray-700 font-bold mt-2">
-                  Giá: Rs {item.productDetails.price * item.quantity}
+                  Giá: {toVnd(item.productDetails.price * item.quantity)}
                 </p>
               </div>
 
@@ -184,7 +205,12 @@ const Cart = () => {
                 <Button
                   variant="text"
                   onClick={() =>
-                    handleUpdateItem(item.product, item.size, item.color)
+                    handleUpdateItem(
+                      item.product,
+                      item.size,
+                      item.color,
+                      item.quantity
+                    )
                   }
                   className="border"
                 >
@@ -192,7 +218,9 @@ const Cart = () => {
                 </Button>
                 <Button
                   variant="text"
-                  onClick={() => handleDeleteItem(item.product)}
+                  onClick={() =>
+                    handleDeleteItem(item.product, item.size, item.color)
+                  }
                   className="border"
                 >
                   Xóa

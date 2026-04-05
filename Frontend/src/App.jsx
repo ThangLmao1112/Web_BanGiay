@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
@@ -25,10 +25,24 @@ import LadiesFootwear from "./pages/LadiesFootwear";
 import FindUs from "./components/FindUs";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
+import Profile from "./pages/Profile";
+import Inbox from "./pages/Inbox";
+import TrackOrder from "./pages/TrackOrder";
+
+const ScrollToTop = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  return null;
+};
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route element={<Layout />} >
         <Route path="/allProducts" element={<AllProducts />} />
@@ -41,6 +55,9 @@ function App() {
         <Route path="/findUs" element={<FindUs />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/orderConfirmation/:orderId" element={<OrderConfirmation />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/inbox" element={<Inbox />} />
+        <Route path="/track-order" element={<TrackOrder />} />
         
         </Route>
         <Route path="/" element={<Home />} />
@@ -52,7 +69,6 @@ function App() {
         <Route path="/manageProducts" element={<ManageProducts />} />
         <Route path="/updateProductDetails" element={<ProductUpdateForm />} />
         <Route path="/updateProductImages" element={<ProductUpdateImage />} />
-        <Route path="/allProducts" element={<AllProducts />} />
         <Route path="/mostRatedProducts" element={<MostRatedProducts />} />
         <Route path="/allUsers" element={<UserList />} />
         <Route path="/removeUser" element={<UserDeleteList />} />

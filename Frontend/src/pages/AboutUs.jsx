@@ -9,19 +9,21 @@ const teamMembers = [
     role: "Nhà sáng lập & CEO",
     image: myImage, 
     description:
-      "Syed Hisham Shah là doanh nhân giàu kinh nghiệm trong lĩnh vực thương mại điện tử, tập trung mang đến các giải pháp giày dép chất lượng cao. Với hơn 10 năm kinh nghiệm, anh có nền tảng vững chắc về bán lẻ và tiếp thị số.",
+      "Syed Hisham Shah là doanh nhân giàu kinh nghiệm trong lĩnh vực thương mại điện tử, tập trung mang đến các lựa chọn giày dép chất lượng cao. Với hơn 10 năm kinh nghiệm, anh có nền tảng vững chắc về bán lẻ và tiếp thị số.",
   },
   {
     name: "Maaz Shinwari",
     role: "Trưởng bộ phận thiết kế",
-    image: "https://via.placeholder.com/150",
+    image:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600&auto=format&fit=crop",
     description:
-      "Maaz Shinwari dẫn dắt đội ngũ thiết kế bằng sự sáng tạo và chỉn chu. Chuyên môn của cô đảm bảo sản phẩm không chỉ đẹp mà còn thoải mái và bền bỉ.",
+      "Maaz Shinwari dẫn dắt đội ngũ thiết kế bằng sự sáng tạo và chỉn chu. Chuyên môn của cô đảm bảo sản phẩm luôn cân bằng giữa thẩm mỹ, độ thoải mái và độ bền.",
   },
   {
     name: "Sherjan",
     role: "Chuyên gia marketing",
-    image: "https://via.placeholder.com/150",
+    image:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=600&auto=format&fit=crop",
     description:
       "Sherjan là chuyên gia marketing với sự am hiểu sâu về xu hướng thương mại điện tử. Các chiến lược sáng tạo của anh giúp chúng tôi tiếp cận khách hàng rộng hơn và nâng cao trải nghiệm mua sắm.",
   },
@@ -40,11 +42,9 @@ const AboutUs = () => {
           </h2>
           <p className="max-w-2xl mx-auto text-sm lg:text-lg">
             Tại The Shoe Shop, chúng tôi cam kết mang đến các sản phẩm giày dép
-            chất lượng cao cho cả nam và nữ. Từ sneaker hợp xu hướng đến giày
-            cao gót cổ điển, bộ sưu tập của chúng tôi được chọn lọc để phù hợp
-            với nhiều phong cách và nhu cầu khác nhau. Chúng tôi ưu tiên sự
-            thoải mái, thời trang và độ bền để khách hàng luôn tự tin trong mỗi
-            bước chân.
+            chất lượng cao cho cả nam và nữ. Bộ sưu tập hiện tập trung vào giày
+            sneaker và sandal theo từng nhu cầu sử dụng, được chọn lọc để cân
+            bằng giữa phong cách, sự thoải mái và độ bền.
           </p>
         </div>
 
@@ -78,10 +78,9 @@ const AboutUs = () => {
             Giá trị cốt lõi
           </h3>
           <p className="max-w-2xl mx-auto text-sm lg:text-lg">
-            Với tư cách một tập thể, chúng tôi cam kết mang đến dịch vụ xuất
-            sắc, đổi mới liên tục và phát triển bền vững trong ngành giày dép.
-            Mục tiêu của chúng tôi là giúp mọi khách hàng tìm được lựa chọn phù
-            hợp nhất và tự tin với quyết định của mình.
+            Chúng tôi ưu tiên dịch vụ rõ ràng, trải nghiệm mua sắm ổn định và
+            danh mục sản phẩm dễ hiểu để khách hàng nhanh chóng tìm đúng đôi
+            giày mình cần.
           </p>
         </div>
 

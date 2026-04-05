@@ -9,52 +9,54 @@ import {
   Typography,
 } from "@material-tailwind/react";
 
-import { FaCog } from "react-icons/fa";
-import { AiOutlineDownload } from "react-icons/ai";
-import { IoHelpCircleSharp } from "react-icons/io5";
 import { FaPowerOff } from "react-icons/fa";
 import { FaUserCircle } from "react-icons/fa";
 import { RiShieldCheckFill } from "react-icons/ri";
+import { MdOutlineLocalPostOffice } from "react-icons/md";
+import { FaRegCompass } from "react-icons/fa";
 
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import avatarGif from "../assets/womangif.gif";
 import avatarGif2 from "../assets/boypic.avif";
+
 const profileMenuItemsBase = [
   {
     label: "Hồ sơ của tôi",
     icon: FaUserCircle,
-  },
-  {
-    label: "Chỉnh sửa hồ sơ",
-    icon: FaCog,
+    path: "/profile",
   },
   {
     label: "Hộp thư",
-    icon: AiOutlineDownload,
+    icon: MdOutlineLocalPostOffice,
+    path: "/inbox",
   },
   {
-    label: "Trợ giúp",
-    icon: IoHelpCircleSharp,
+    label: "Theo dõi đơn hàng",
+    icon: FaRegCompass,
+    path: "/track-order",
   },
 ];
 
 const AvatarWithUserDropdown = () => {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get("/api/users/get-user-details");
-        if (response.data.data.role === "admin") {
-          setIsAdmin(true);
-        }
+        const response = await axios.get("/api/users/me", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        const role = response?.data?.data?.role;
+        setIsAdmin(role === "admin");
       } catch (error) {
-        console.error("Error fetching user details:", error);
+        setIsAdmin(false);
       }
     };
 
@@ -63,26 +65,35 @@ const AvatarWithUserDropdown = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("/api/users/logout");
+      await axios.post("/api/users/logout", null, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       toast.success("Đăng xuất thành công!");
       localStorage.removeItem("token");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("userId");
       navigate("/login");
     } catch (error) {
       console.error("Error logging out:", error);
       toast.error("Đăng xuất thất bại. Vui lòng thử lại.");
     }
   };
-  
-  const handleMenuItemClick = (label) => {
+
+  const closeMenu = () => setIsMenuOpen(false);
+
+  const handleMenuItemClick = ({ label, path }) => {
     if (label === "Đăng xuất") {
       handleLogout();
     } else if (label === "Bảng quản trị") {
       navigate("/adminPanel");
+    } else if (path) {
+      navigate(path);
     }
     closeMenu();
   };
 
-  const closeMenu = () => setIsMenuOpen(false);
   const profileMenuItems = [
     ...profileMenuItemsBase,
     ...(isAdmin
@@ -90,6 +101,7 @@ const AvatarWithUserDropdown = () => {
           {
             label: "Bảng quản trị",
             icon: RiShieldCheckFill,
+            path: "/adminPanel",
           },
         ]
       : []),
@@ -98,10 +110,6 @@ const AvatarWithUserDropdown = () => {
       icon: FaPowerOff,
     },
   ];
-
-  const filteredMenuItems = isAdmin
-    ? profileMenuItems.filter((item) => item.label !== "Trợ giúp")
-    : profileMenuItems;
 
   return (
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
@@ -113,8 +121,7 @@ const AvatarWithUserDropdown = () => {
         >
           <Avatar
             variant="circular"
-            // size="md"
-            alt="tania andrew"
+            alt="user avatar"
             withBorder={true}
             color="blue-gray"
             className="p-0.5 w-full sm:h-10 md:w-13 md:h-13 lg:w-15 lg:h-15 xl:w-18 xl:h-18"
@@ -122,16 +129,16 @@ const AvatarWithUserDropdown = () => {
           />
         </Button>
       </MenuHandler>
-      <MenuList className="p-1">
-        {filteredMenuItems.map(({ label, icon }, key) => {
+      <MenuList className="min-w-[230px] rounded-xl border border-blue-gray-100 p-2 shadow-lg">
+        {profileMenuItems.map(({ label, icon, path }) => {
           return (
             <MenuItem
               key={label}
-              onClick={() => handleMenuItemClick(label)}
-              className={`flex items-center gap-2 rounded ${
+              onClick={() => handleMenuItemClick({ label, path })}
+              className={`flex items-center gap-3 rounded-md py-2.5 px-3 ${
                 label === "Đăng xuất"
                   ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
-                  : ""
+                  : "hover:bg-blue-gray-50"
               }`}
             >
               {React.createElement(icon, {
@@ -155,5 +162,6 @@ const AvatarWithUserDropdown = () => {
       <ToastContainer />
     </Menu>
   );
-}
-export default AvatarWithUserDropdown
+};
+
+export default AvatarWithUserDropdown;

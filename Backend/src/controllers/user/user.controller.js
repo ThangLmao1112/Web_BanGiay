@@ -240,6 +240,113 @@ const getUserDetails = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, user, "User Details fetched"));
 });
+
+const getMyProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user?._id)
+    .select("firstName lastName email gender role createdAt updatedAt contact")
+    .populate({ path: "contact", select: "phone" })
+    .lean();
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "Profile fetched successfully"));
+});
+
+const updateMyProfile = asyncHandler(async (req, res) => {
+  const { firstName, lastName, gender, phone } = req.body;
+
+  const hasDataToUpdate =
+    firstName !== undefined ||
+    lastName !== undefined ||
+    gender !== undefined ||
+    phone !== undefined;
+
+  if (!hasDataToUpdate) {
+    throw new ApiError(400, "Please provide at least one field to update");
+  }
+
+  const user = await User.findById(req.user?._id).populate("contact");
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  if (firstName !== undefined) {
+    user.firstName = firstName;
+  }
+
+  if (lastName !== undefined) {
+    user.lastName = lastName;
+  }
+
+  if (gender !== undefined) {
+    user.gender = gender;
+  }
+
+  await user.save();
+
+  if (phone !== undefined) {
+    if (user.contact) {
+      user.contact.phone = phone;
+      await user.contact.save();
+    } else {
+      const createdContact = await Contact.create({ phone });
+      user.contact = createdContact._id;
+      await user.save();
+    }
+  }
+
+  const updatedUser = await User.findById(user._id)
+    .select("firstName lastName email gender role createdAt updatedAt contact")
+    .populate({ path: "contact", select: "phone" })
+    .lean();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updatedUser, "Profile updated successfully"));
+});
+
+const changeMyPassword = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword, confirmPassword } = req.body;
+
+  if (!oldPassword || !newPassword || !confirmPassword) {
+    throw new ApiError(400, "Please provide old, new and confirm password");
+  }
+
+  if (newPassword !== confirmPassword) {
+    throw new ApiError(400, "New password and confirm password must match");
+  }
+
+  if (newPassword.length < 8) {
+    throw new ApiError(400, "New password must be at least 8 characters");
+  }
+
+  const user = await User.findById(req.user?._id).populate("auth");
+  if (!user || !user.auth) {
+    throw new ApiError(404, "User auth not found");
+  }
+
+  const isOldPasswordValid = await user.auth.isPasswordCorrect(oldPassword);
+  if (!isOldPasswordValid) {
+    throw new ApiError(401, "Old password is incorrect");
+  }
+
+  user.auth.password = newPassword;
+  await user.auth.save();
+
+  await User.findByIdAndUpdate(user._id, {
+    $set: {
+      refreshToken: undefined,
+    },
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password changed successfully"));
+});
 const getAllUsers = asyncHandler(async (req, res) => {
   const {
     page = 1,
@@ -357,6 +464,9 @@ export {
   refreshAccessToken,
   getUserFirstName,
   getUserDetails,
+  getMyProfile,
+  updateMyProfile,
+  changeMyPassword,
   getAllUsers,
   removeUser,
   getMostActiveUsers,
